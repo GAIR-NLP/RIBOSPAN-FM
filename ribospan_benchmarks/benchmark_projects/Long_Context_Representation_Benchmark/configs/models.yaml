@@ -1,0 +1,68 @@
+schema_version: 1
+models_root: ../../../model_weights
+models:
+  - name: HydraRNA
+    backend: hydrarna
+    source_path: HydraRNA
+    context_window: 4096
+
+  - name: AIDO.RNA-CDS
+    backend: rnabert
+    source_path: AIDO.RNA-CDS
+    context_window: 1024
+
+  - name: AIDO.RNA-CDS-YaRN
+    backend: rnabert
+    source_path: AIDO.RNA-CDS
+    context_window: 1024
+    rope_scaling:
+      type: yarn
+      factor_mode: sequence_length
+      original_max_position_embeddings: 1024
+      special_tokens: 2
+      yarn_alpha: 1.0
+      yarn_beta: 4.0
+
+  - name: RIBOSPAN-1K-15
+    backend: ribospan
+    source_path: RIBOSPAN-1K-15
+    context_window: 1024
+
+  - name: RIBOSPAN-1K-15-YaRN
+    backend: ribospan
+    source_path: RIBOSPAN-1K-15
+    context_window: 1024
+    rope_scaling:
+      type: yarn
+      factor_mode: sequence_length
+      original_max_position_embeddings: 1024
+      special_tokens: 2
+      yarn_alpha: 1.0
+      yarn_beta: 4.0
+
+  - name: RIBOSPAN-1K-40
+    backend: ribospan
+    source_path: RIBOSPAN-1K-40
+    context_window: 1024
+
+  - name: RIBOSPAN-1K-40-YaRN
+    backend: ribospan
+    source_path: RIBOSPAN-1K-40
+    context_window: 1024
+    rope_scaling:
+      type: yarn
+      factor_mode: sequence_length
+      original_max_position_embeddings: 1024
+      special_tokens: 2
+      yarn_alpha: 1.0
+      yarn_beta: 4.0
+
+  - name: RIBOSPAN-10K-15
+    backend: ribospan
+    source_path: RIBOSPAN-10K-15
+    context_window: 10240
+
+  - name: RIBOSPAN-10K-40
+    backend: ribospan
+    source_path: RIBOSPAN-10K-40
+    context_window: 10240

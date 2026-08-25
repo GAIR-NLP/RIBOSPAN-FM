@@ -1,0 +1,39 @@
+project_root: .
+models_registry: configs/models.yaml
+
+data:
+  path: data/overall_sequences.tsv
+  id_column: id
+  type_column: rna_type
+  sequence_column: sequence
+
+models:
+  names:
+    - RNA-FM
+    - RiNALMo
+    - AIDO.RNA-CDS
+    - HydraRNA
+    - RIBOSPAN-1K-15
+    - RIBOSPAN-1K-40
+    - RIBOSPAN-10K-15
+    - RIBOSPAN-10K-40
+  device: cuda:0
+  dtype: bfloat16
+  layers: [-1]
+  pooling: mean
+  truncate: prefix
+  skip_existing: true
+
+analysis:
+  knn_k: 10
+  test_size: 0.3
+  seed: 42
+  min_type_count: 20
+  long_length_threshold: 1024
+  tsne_perplexity: 30
+  tsne_metric: euclidean
+  tsne_max_points: null
+  tsne_n_jobs: 1
+  reuse_coords: true
+
+output_root: outputs/type_separability

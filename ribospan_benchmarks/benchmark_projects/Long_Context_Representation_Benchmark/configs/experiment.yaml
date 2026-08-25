@@ -1,0 +1,202 @@
+schema_version: 1
+default_profile: length_sweep
+models_registry: configs/models.yaml
+output_manifest: outputs/rna_context_pairs.jsonl
+
+matrix:
+  lengths: [256, 512, 1024, 2048, 4096, 8192, 10240]
+  pattern_size_mode: fraction
+  pattern_lengths: []
+  pattern_fractions: [0.03125]
+  positions: [0.10, 0.25, 0.50, 0.75, 0.90]
+  seeds:
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+     20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+     30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+     40, 41, 42, 43, 44, 45, 46, 47, 48, 49]
+
+pattern_families:
+  - composition_conditioned_structure
+pattern_ids: [native_low_complexity]
+
+backgrounds:
+  balanced_iid:
+    enabled: true
+    source_type: synthetic
+    probabilities: {A: 0.25, C: 0.25, G: 0.25, T: 0.25}
+  specified_gc:
+    enabled: true
+    source_type: synthetic
+    gc_values: [0.30, 0.50, 0.70]
+  markov:
+    enabled: true
+    source_type: synthetic
+    initial: {A: 0.25, C: 0.25, G: 0.25, T: 0.25}
+    transitions:
+      A: {A: 0.70, C: 0.10, G: 0.10, T: 0.10}
+      C: {A: 0.10, C: 0.70, G: 0.10, T: 0.10}
+      G: {A: 0.10, C: 0.10, G: 0.70, T: 0.10}
+      T: {A: 0.10, C: 0.10, G: 0.10, T: 0.70}
+  real_mrna:
+    enabled: true
+    source_type: real
+    path: data/mRNA.tsv
+    id_column: id
+    sequence_column: sequences
+    short_sequence_policy: length_bin_full
+    length_tolerance_fraction: 0.01
+
+controls:
+  types: [structured, native]
+
+sampling:
+  representation_distance_bins: [0, 8, 32, 128, 512, 1024, 2048, 4096, 10240]
+  far_field_threshold: 1024
+  anisotropy_pair_sample_size: 2048
+  context_pair_sample_size: 512
+  max_positions_per_bin: 1024
+  max_pair_groups: null
+
+cosine:
+  dtype: bfloat16
+  device: auto
+  resume: true
+  context:
+    max_positions_per_context: 512
+    max_pairs_per_metric: 4096
+    anisotropy_match_base: true
+    motif_interior_trim: 0
+    background_exclusion_radius: 8
+    trajectory:
+      enabled: false
+      positions_per_base_region: 2
+      projection_dim: 3
+      projection_seed: 1729
+  diffusion:
+    distance_bins: [0, 8, 32, 128, 512, 1024, 2048, 4096, 10240]
+    far_field_threshold: 1024
+    relative_distal_threshold: 0.75
+    relative_distal_thresholds: [0.25, 0.50, 0.75]
+    max_positions_per_bin: 1024
+
+attention:
+  enabled: true
+  layers: all
+  heads: all
+  heatmap_window: 10240
+  heatmap_pool_size: 0
+  heatmap_norm_quantile: 0.995
+  query_chunk_size: 32
+  batch_size: 1
+  dtype: bfloat16
+
+profiles:
+  publication: {}
+  pilot:
+    matrix:
+      lengths: [512, 1024, 4096, 10240]
+      pattern_size_mode: fraction
+      pattern_lengths: []
+      pattern_fractions: [0.03125]
+      positions: [0.50]
+      seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    pattern_ids:
+      - native_low_complexity
+    backgrounds:
+      balanced_iid:
+        enabled: true
+      specified_gc:
+        enabled: false
+      markov:
+        enabled: false
+      real_mrna:
+        enabled: false
+    sampling:
+      anisotropy_pair_sample_size: 512
+      context_pair_sample_size: 256
+      max_positions_per_bin: 512
+      max_pair_groups: null
+  formal_length:
+    matrix:
+      lengths: [10240]
+      pattern_size_mode: fixed
+      pattern_lengths: [256]
+      pattern_fractions: []
+      positions: [0.50]
+      seeds: [0]
+    pattern_ids: [native_low_complexity]
+    backgrounds:
+      balanced_iid:
+        enabled: false
+      specified_gc:
+        enabled: false
+      markov:
+        enabled: false
+      real_mrna:
+        enabled: true
+    sampling:
+      anisotropy_pair_sample_size: 2048
+      context_pair_sample_size: 512
+      max_positions_per_bin: 1024
+      max_pair_groups: 1
+    cosine:
+      context:
+        trajectory:
+          enabled: true
+  length_sweep:
+    matrix:
+      lengths: [1024, 2048, 4096, 8192, 10240]
+      pattern_size_mode: fraction
+      pattern_lengths: []
+      pattern_fractions: [0.03125]
+      positions: [0.50]
+      seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    pattern_ids: [native_low_complexity]
+    backgrounds:
+      balanced_iid:
+        enabled: false
+      specified_gc:
+        enabled: false
+      markov:
+        enabled: false
+      real_mrna:
+        enabled: true
+    sampling:
+      anisotropy_pair_sample_size: 2048
+      context_pair_sample_size: 512
+      max_positions_per_bin: 1024
+      max_pair_groups: null
+    cosine:
+      context:
+        trajectory:
+          enabled: true
+          positions_per_base_region: 4
+          projection_dim: 0
+  smoke:
+    matrix:
+      lengths: [256]
+      pattern_size_mode: fixed
+      pattern_lengths: [32]
+      pattern_fractions: []
+      positions: [0.50]
+      seeds: [0]
+    pattern_ids: [native_low_complexity]
+    backgrounds:
+      balanced_iid:
+        enabled: true
+      specified_gc:
+        enabled: false
+      markov:
+        enabled: false
+      real_mrna:
+        enabled: false
+    sampling:
+      anisotropy_pair_sample_size: 64
+      context_pair_sample_size: 64
+      max_positions_per_bin: 128
+      max_pair_groups: 2
+    cosine:
+      context:
+        trajectory:
+          enabled: true

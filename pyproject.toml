@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ribospan"
+version = "1.0.0"
+description = "A bidirectional RNA foundation model with single-nucleotide tokenization and native pretraining up to 10,240 nt."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.12"
+authors = [
+  { name = "RIBOSPAN Team" },
+]
+keywords = [
+  "RNA",
+  "foundation-model",
+  "long-context",
+  "masked-language-model",
+  "bidirectional-transformer",
+]
+dependencies = [
+  "numpy==1.26.4",
+  "torch==2.6.0",
+  "tokenizers==0.15.2",
+  "transformers==4.38.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/GAIR-NLP/RIBOSPAN-FM"
+Paper = "https://arxiv.org/abs/2608.22849"
+"Model Weights" = "https://huggingface.co/SII-GAIR-NLP/RIBOSPAN-FM"
+"Model License" = "https://github.com/GAIR-NLP/RIBOSPAN-FM/blob/main/models/LICENSE"
+Dataset = "https://huggingface.co/datasets/SII-GAIR-NLP/RIBOSPAN-FM-Corpus"
+
+[tool.setuptools.packages.find]
+include = ["ribospan"]
+
+[tool.setuptools.package-data]
+ribospan = ["vocab.txt"]

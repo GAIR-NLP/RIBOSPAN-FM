@@ -1,0 +1,29 @@
+# Representation benchmarks
+
+```text
+ribospan_benchmarks/
+  setup.sh
+  envs/benchmark.yml
+  model_src/
+  model_weights/
+  benchmark_projects/
+    Long_Context_Representation_Benchmark/
+    RNA_Type_Representation_Benchmark/
+```
+
+## Setup
+
+```bash
+./setup.sh
+```
+
+`--weights-only` skips the conda env; `--env NAME` sets the env name (default `benchmark`). Public checkpoints land in `model_weights/`; place RIBOSPAN under `model_weights/RIBOSPAN-*/`.
+
+Do not install packages by hand (`pip`, `conda install`, or `conda env create -f envs/benchmark.yml`) unless you know exactly what you are doing: `mamba-ssm` and `flash-attn` need the flags in `setup.sh`.
+
+## Projects
+
+Reproduce from the project README after `./setup.sh`:
+
+- [Long-context representation](benchmark_projects/Long_Context_Representation_Benchmark/README.md) — cosine geometry, diffusion, and attention on complete mRNAs
+- [RNA-type representation](benchmark_projects/RNA_Type_Representation_Benchmark/README.md) — frozen 10-NN / t-SNE on biotypes and Rfam families

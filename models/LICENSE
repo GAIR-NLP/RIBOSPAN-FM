@@ -1,0 +1,732 @@
+RIBOSPAN NON-COMMERCIAL MODEL LICENSE
+Version 1.0
+
+Copyright © 2026 Shanghai Innovation Institute.
+All rights reserved except as expressly granted under this License.
+
+IMPORTANT NOTICE
+
+This RIBOSPAN Non-Commercial Model License (the "License") governs the use of RIBOSPAN Model Materials made available by Shanghai Innovation Institute (the "Licensor").
+
+By downloading, accessing where access is conditioned on acceptance, using, reproducing, modifying, fine-tuning, or distributing any RIBOSPAN Model Materials, you agree to be bound by this License.
+
+If you accept this License on behalf of an organization or other legal entity, you represent that you have authority to bind that entity to this License.
+
+If you do not agree to the terms of this License, you may not use the RIBOSPAN Model Materials.
+
+This License applies only to RIBOSPAN model weights, checkpoints, and other model-specific materials expressly released under this License.
+
+Source code separately released under the Apache License 2.0 is not governed by this License and remains subject to the Apache License 2.0.
+
+1. DEFINITIONS
+
+1.1 "RIBOSPAN Model Materials"
+
+"RIBOSPAN Model Materials" or "Model Materials" means RIBOSPAN model weights, pretrained checkpoints, model parameters, model-specific configuration files, weight indexes, tokenizer assets distributed as part of a model release, and other model-specific materials expressly distributed by the Licensor under this License.
+
+For clarity, source code separately released under the Apache License 2.0 is not included in the Model Materials.
+
+1.2 "Derivative Model"
+
+"Derivative Model" means any model, checkpoint, or set of model parameters derived from, adapted from, or materially based on the RIBOSPAN Model Materials, including models produced through:
+
+(a) fine-tuning;
+
+(b) continued pretraining;
+
+(c) parameter-efficient fine-tuning;
+
+(d) adapters, LoRA, or similar parameter modifications;
+
+(e) model merging;
+
+(f) pruning;
+
+(g) quantization;
+
+(h) weight interpolation;
+
+(i) model conversion; or
+
+(j) any other modification or adaptation of the Model Materials.
+
+A model that uses RIBOSPAN representations or Outputs as training data, features, supervision, or other inputs, without incorporating, reproducing, or modifying RIBOSPAN parameters, is not by that fact alone a Derivative Model. Such a model may constitute an Output-Derived Model under Section 1.5.
+
+1.3 "Output"
+
+"Output" means information generated, inferred, or computed through use of the RIBOSPAN Model Materials, including, without limitation:
+
+(a) nucleotide probabilities or scores;
+
+(b) logits;
+
+(c) embeddings;
+
+(d) hidden representations;
+
+(e) attention-related representations;
+
+(f) annotations or predictions;
+
+(g) variant scores;
+
+(h) rankings or selections of nucleotide sequences or biological candidates;
+
+(i) generated or optimized nucleotide sequences;
+
+(j) candidate biological sequences or designs; and
+
+(k) other representations, predictions, scores, rankings, selections, or model-generated results.
+
+Data, sequences, molecules, designs, or other materials supplied by a user as input to RIBOSPAN do not become Outputs merely because they are processed, scored, embedded, ranked, predicted upon, or evaluated using RIBOSPAN.
+
+1.4 "Output Derivative"
+
+"Output Derivative" means any sequence, molecule, design, dataset, representation, candidate, selection, prioritization, decision result, or other result materially generated, modified, optimized, developed, selected, prioritized, or created on the basis of one or more Outputs.
+
+An independently owned user input does not become an Output Derivative merely because it is processed, scored, embedded, ranked, predicted upon, or evaluated using RIBOSPAN.
+
+However, a selection, ranking, prioritization, modification, optimization, design decision, or development decision materially based on one or more RIBOSPAN Outputs may itself constitute an Output or Output Derivative and remains subject to the applicable restrictions of this License.
+
+1.5 "Output-Derived Model"
+
+"Output-Derived Model" means any model, predictor, classifier, regressor, scoring system, representation model, or other machine-learning system materially trained, fine-tuned, optimized, calibrated, or otherwise developed using RIBOSPAN Outputs or representations, without incorporating, reproducing, or modifying RIBOSPAN parameters.
+
+Examples include task-specific models materially trained or developed using RIBOSPAN embeddings, hidden representations, logits, scores, annotations, predictions, or other Outputs.
+
+An Output-Derived Model is not a Derivative Model solely because it was developed using RIBOSPAN Outputs.
+
+A general-purpose model intended to reproduce, substitute for, or materially replicate substantial RIBOSPAN capabilities remains subject to Section 5 regardless of whether it may otherwise qualify as an Output-Derived Model.
+
+1.6 "Separable Adaptation"
+
+"Separable Adaptation" means a separately distributable task-specific adapter, LoRA parameter set, parameter-efficient fine-tuning module, task-specific head, or similar model component developed from or for use with RIBOSPAN Model Materials that does not include the underlying full RIBOSPAN checkpoint or a substantial portion of its parameters and cannot reasonably be used by itself to reconstruct, reproduce, or substitute for the underlying checkpoint.
+
+A Separable Adaptation that is derived from, adapts, or modifies RIBOSPAN parameters may constitute a Derivative Model. The designation of a component as a Separable Adaptation does not exempt it from any otherwise applicable requirement of this License and affects distribution only to the extent expressly provided in Sections 10 and 11.
+
+1.7 "Restricted-Access Checkpoint"
+
+"Restricted-Access Checkpoint" means any RIBOSPAN checkpoint that the Licensor designates as subject to access approval, access conditions, identity or affiliation verification, or another controlled distribution process.
+
+A checkpoint may be designated as a Restricted-Access Checkpoint regardless of the technical platform, hosting service, application procedure, or distribution mechanism through which access is provided.
+
+1.8 "Non-Commercial Research Purpose"
+
+"Non-Commercial Research Purpose" means use primarily for:
+
+(a) academic or scientific research;
+
+(b) education or teaching;
+
+(c) model evaluation;
+
+(d) benchmarking;
+
+(e) reproducibility studies;
+
+(f) experimentation; or
+
+(g) scientific publication,
+
+provided that such use is not intended for, directed toward, or materially supporting commercial advantage, revenue generation, commercial product development, commercial service provision, technology commercialization, or other commercial exploitation.
+
+Research performed by an academic, educational, governmental, or non-profit organization is not automatically a Non-Commercial Research Purpose where the research is performed primarily for the commercial benefit of a for-profit entity or is materially directed toward the development, validation, optimization, regulatory advancement, or commercialization of a commercial product, service, platform, or technology.
+
+1.9 "Commercial Use"
+
+"Commercial Use" means any use that is intended for, directed toward, or materially supports commercial advantage, revenue generation, commercial product development, commercial service provision, technology commercialization, commercial research or development, or other commercial exploitation.
+
+Commercial Use includes the activities described in Section 3.
+
+2. LICENSE GRANT
+
+Subject to continued compliance with this License, the Licensor grants you, under the intellectual property and other rights owned or controlled by the Licensor and embodied in or applicable to the RIBOSPAN Model Materials, a limited, worldwide, royalty-free, non-exclusive, non-transferable, and non-sublicensable license to:
+
+(a) access and use the RIBOSPAN Model Materials for Non-Commercial Research Purposes;
+
+(b) reproduce the Model Materials as reasonably necessary for such permitted use;
+
+(c) create Derivative Models for Non-Commercial Research Purposes;
+
+(d) generate, analyze, and use Outputs and Output Derivatives for Non-Commercial Research Purposes;
+
+(e) develop Output-Derived Models for Non-Commercial Research Purposes; and
+
+(f) publish scientific results obtained through permitted use of RIBOSPAN, including reasonable portions of Outputs necessary to describe, evaluate, or reproduce such research.
+
+No rights are granted except those expressly stated in this License.
+
+3. COMMERCIAL USE
+
+Commercial Use is not permitted under this License.
+
+A separate written commercial license from the Licensor is required before the RIBOSPAN Model Materials, Derivative Models, Separable Adaptations, Output-Derived Models, Outputs, or Output Derivatives are used for Commercial Use.
+
+Commercial Use includes, without limitation:
+
+3.1 Commercial Products and Services
+
+Use in connection with any product, platform, technology, or service that is sold, licensed, subscribed to, monetized, or otherwise provided for commercial consideration.
+
+3.2 Hosted Models, APIs, and Analysis Services
+
+Providing access to RIBOSPAN, a Derivative Model, a Separable Adaptation, an Output-Derived Model, or Outputs generated using any of them by means of:
+
+(a) a commercial API;
+
+(b) software-as-a-service;
+
+(c) hosted inference;
+
+(d) cloud services;
+
+(e) paid analysis services;
+
+(f) commercial sequence-scoring services;
+
+(g) commercial embedding or representation services;
+
+(h) commercial sequence-design or optimization services; or
+
+(i) other commercial model-serving, prediction, analytical, or computational arrangements.
+
+3.3 Commercial Research and Development
+
+Use by, on behalf of, or primarily for the benefit of a for-profit entity in research or development materially directed toward a current or future commercial product, service, platform, technology, development program, or commercially exploitable intellectual property.
+
+3.4 Sponsored Research, Contract Research, and Consulting
+
+Research, development, consulting, testing, validation, optimization, or other work performed primarily for the commercial benefit of a third party, including work carried out under a commercial sponsorship, contract research agreement, service agreement, consulting agreement, or similar arrangement.
+
+3.5 Biotechnology and Life-Science Development
+
+Use in the discovery, screening, scoring, selection, ranking, optimization, validation, development, manufacture, regulatory development, or commercialization of any of the following for commercial purposes:
+
+(a) therapeutics;
+
+(b) vaccines;
+
+(c) diagnostics;
+
+(d) RNA medicines;
+
+(e) nucleic-acid products;
+
+(f) biotechnology products;
+
+(g) agricultural biotechnology products;
+
+(h) industrial biotechnology products; or
+
+(i) other biological products, technologies, or services.
+
+3.6 Commercial Exploitation of Model-Assisted Designs
+
+Commercial exploitation of nucleotide sequences, biological molecules, candidate designs, optimized sequences, selected variants, or other biological or technological results where their selection, prioritization, optimization, modification, design, or development was materially enabled by or based on use of the RIBOSPAN Model Materials, a Derivative Model, a Separable Adaptation, an Output-Derived Model, or Outputs.
+
+For clarity, this Section does not transfer ownership of independently owned user inputs or independently owned intellectual property to the Licensor.
+
+3.7 Commercial Use of Output-Derived Models
+
+Commercial deployment, licensing, sale, distribution for commercial purposes, hosted use, or internal commercial use of an Output-Derived Model materially developed using RIBOSPAN Outputs or representations requires a separate written commercial license from the Licensor.
+
+3.8 Internal Commercial Use
+
+Use of RIBOSPAN, a Derivative Model, a Separable Adaptation, an Output-Derived Model, Outputs, or Output Derivatives within an internal workflow of a commercial entity constitutes Commercial Use where such use materially supports:
+
+(a) a commercial product;
+
+(b) a commercial service;
+
+(c) a commercial research or development program;
+
+(d) commercial decision-making;
+
+(e) intellectual-property generation directed toward commercial exploitation; or
+
+(f) another revenue-generating or commercially strategic activity.
+
+4. DERIVATIVE MODELS
+
+You may create Derivative Models solely for purposes permitted under this License.
+
+Derivative Models remain subject to this License to the extent that their creation, use, modification, or distribution depends upon rights granted under this License.
+
+Modification of the RIBOSPAN Model Materials does not grant any additional commercial rights.
+
+You may not avoid or circumvent the restrictions of this License by fine-tuning, continued pretraining, quantizing, merging, converting, adapting, pruning, or otherwise modifying the Model Materials.
+
+Subject to Sections 9, 10, and 11, Derivative Models and permitted Separable Adaptations may be modified, shared, and redistributed for Non-Commercial Research Purposes in accordance with this License.
+
+Commercial Use of a Derivative Model or Separable Adaptation developed from the RIBOSPAN Model Materials requires a separate written commercial license from the Licensor.
+
+5. MODEL DISTILLATION, EXTRACTION, AND SUBSTITUTE MODELS
+
+Except with prior written permission from the Licensor, you may not use the RIBOSPAN Model Materials, Derivative Models, Separable Adaptations, Output-Derived Models, Outputs, or Output Derivatives for any of the following activities.
+
+5.1 Model Distillation
+
+You may not perform model distillation, imitation learning, teacher-student training, or substantially similar procedures intended to transfer substantial RIBOSPAN capabilities into another general-purpose model.
+
+5.2 Model Extraction
+
+You may not systematically query, process, or evaluate RIBOSPAN for the purpose of extracting, reconstructing, approximating, or reproducing substantial capabilities or behavior of RIBOSPAN.
+
+5.3 Training Substitute Foundation Models
+
+You may not systematically generate, collect, or curate RIBOSPAN Outputs or Output Derivatives for the purpose of training, pretraining, optimizing, or materially improving a general-purpose RNA foundation model or another model intended to reproduce or substitute for substantial capabilities of RIBOSPAN.
+
+5.4 Competing General-Purpose Models
+
+You may not use the RIBOSPAN Model Materials, Derivative Models, Separable Adaptations, Output-Derived Models, Outputs, or Output Derivatives to create or materially improve a model intended to serve as a substantially similar general-purpose replacement for RIBOSPAN.
+
+5.5 Permitted Task-Specific Downstream Models
+
+This Section does not prohibit the development of task-specific Derivative Models, Separable Adaptations, or Output-Derived Models for specialized Non-Commercial Research Purposes, including:
+
+(a) classification;
+
+(b) regression;
+
+(c) functional annotation;
+
+(d) structure prediction;
+
+(e) localization prediction;
+
+(f) sequence-property prediction;
+
+(g) variant analysis; or
+
+(h) other specialized scientific tasks,
+
+provided that such models or adaptations are not intended to reproduce or substitute for RIBOSPAN as a general-purpose RNA foundation model and are otherwise used in compliance with this License.
+
+6. OUTPUTS, OUTPUT DERIVATIVES, AND OUTPUT-DERIVED MODELS
+
+You may generate and use Outputs and Output Derivatives, and develop and use Output-Derived Models, for Non-Commercial Research Purposes.
+
+Subject to Sections 10 and 11, Output-Derived Models may be modified, shared, and redistributed for Non-Commercial Research Purposes in accordance with this License.
+
+Commercial Use of Outputs, Output Derivatives, or Output-Derived Models materially resulting from use of the RIBOSPAN Model Materials requires a separate written commercial license from the Licensor.
+
+Examples include, without limitation, commercial use of:
+
+(a) model-ranked RNA sequences;
+
+(b) model-optimized nucleotide sequences;
+
+(c) model-selected variants;
+
+(d) model-assisted molecular or sequence designs;
+
+(e) embeddings incorporated into commercial systems;
+
+(f) sequence scores used in commercial research or decision-making;
+
+(g) candidate molecules or sequences materially selected using RIBOSPAN;
+
+(h) task-specific models materially trained or developed using RIBOSPAN embeddings, hidden representations, predictions, scores, or other Outputs; or
+
+(i) other RIBOSPAN-assisted models, designs, selections, or decisions used in commercial development.
+
+7. USER INPUTS
+
+You retain whatever rights you may have in data, sequences, molecules, designs, or other materials that you provide as input to RIBOSPAN.
+
+Processing, embedding, scoring, predicting, ranking, or evaluating an input using RIBOSPAN does not, by itself, transfer ownership of that input to the Licensor.
+
+An independently owned input does not become owned by the Licensor, nor does its underlying ownership change, merely because RIBOSPAN has processed it.
+
+Nothing in this Section exempts the use of RIBOSPAN-generated scores, rankings, selections, embeddings, predictions, optimization results, or other Outputs from the restrictions of this License.
+
+Where commercial selection, prioritization, optimization, modification, validation, or development of a user-owned input materially relies on RIBOSPAN Outputs, such use constitutes Commercial Use to the extent described in Section 3.
+
+8. INTELLECTUAL PROPERTY IN OUTPUTS
+
+Nothing in this License determines whether copyright, patent, database, trade-secret, or other intellectual property rights arise in any particular Output, Output Derivative, Output-Derived Model, Derivative Model, or Separable Adaptation, or who owns such rights under applicable law.
+
+The contractual restrictions imposed by this License apply independently of whether a particular Output, Output Derivative, Output-Derived Model, Derivative Model, or Separable Adaptation is eligible for copyright, patent, or other intellectual property protection.
+
+Nothing in this License transfers ownership of independently owned user inputs, independently developed materials, or independently owned third-party intellectual property to the Licensor.
+
+Nothing in this Section grants a user any rights in patents, trademarks, copyrights, trade secrets, datasets, biological materials, or other intellectual property owned or controlled by the Licensor except as expressly provided by this License.
+
+9. PUBLICLY RELEASED CHECKPOINTS
+
+If the Licensor expressly designates a RIBOSPAN checkpoint as publicly available, you may access and use that checkpoint in accordance with this License.
+
+You may redistribute an unmodified publicly released checkpoint for Non-Commercial Research Purposes only if:
+
+(a) this License accompanies the redistributed Model Materials;
+
+(b) all applicable copyright, attribution, and license notices are retained;
+
+(c) no additional terms are imposed that conflict with this License;
+
+(d) recipients are clearly informed that any use of the redistributed Model Materials is subject to this License and that their rights to use such Model Materials arise under this License, not through any assignment, transfer, or sublicense from the redistributor; and
+
+(e) the redistributed copy is not presented in a manner that implies endorsement, sponsorship, certification, partnership, or official distribution by the Licensor.
+
+Recipients of Model Materials redistributed in accordance with this Section may independently exercise the rights granted under this License, including creating and, where permitted by Sections 10 and 11, further modifying and redistributing Derivative Models or other permitted research adaptations for Non-Commercial Research Purposes.
+
+10. DISTRIBUTION AND LICENSING OF DERIVATIVE AND OUTPUT-DERIVED MODELS
+
+10.1 Distribution of Derivative Models from Publicly Released Checkpoints
+
+A Derivative Model derived from one or more publicly released RIBOSPAN checkpoints, and not from any Restricted-Access Checkpoint, may be distributed for Non-Commercial Research Purposes only if:
+
+(a) distribution has not otherwise been restricted by the Licensor;
+
+(b) this License accompanies the Derivative Model or is clearly identified as governing any use, modification, or distribution of the Derivative Model that depends upon rights in the underlying RIBOSPAN Model Materials granted under this License;
+
+(c) any use, modification, or distribution of the Derivative Model that depends upon rights granted under this License remains subject to this License;
+
+(d) material modifications are clearly identified;
+
+(e) required attribution is retained;
+
+(f) recipients are clearly informed that any rights to use the underlying RIBOSPAN Model Materials arise under this License and not through any assignment, transfer, or sublicense from the distributor; and
+
+(g) the Derivative Model is not distributed under terms that purport to authorize Commercial Use that would otherwise require separate authorization from the Licensor under this License.
+
+A recipient of a Derivative Model distributed in compliance with this Section may use, modify, fine-tune, and further redistribute that Derivative Model for Non-Commercial Research Purposes, subject to this License and the requirements of this Section.
+
+10.2 Distribution of Output-Derived Models from Publicly Released Checkpoints
+
+An Output-Derived Model materially developed using Outputs or representations generated solely from one or more publicly released RIBOSPAN checkpoints, and not using Outputs or representations from any Restricted-Access Checkpoint, may be distributed for Non-Commercial Research Purposes only if:
+
+(a) such distribution is otherwise permitted under this License;
+
+(b) the distributor clearly identifies that the model was materially developed using RIBOSPAN Outputs or representations;
+
+(c) reasonable attribution to RIBOSPAN is provided;
+
+(d) the distribution includes a copy of, or a clear reference to, this License, and access to or use of the Output-Derived Model is conditioned on the recipient's acceptance of the applicable terms of this License;
+
+(e) recipients are clearly informed that distribution of the Output-Derived Model does not assign, transfer, or sublicense any rights granted under this License with respect to the RIBOSPAN Model Materials, Outputs, or representations;
+
+(f) recipients are clearly informed that the distribution does not grant any right to engage in Commercial Use that requires separate authorization from the Licensor under this License; and
+
+(g) the Output-Derived Model is not distributed under terms that purport to grant rights to engage in Commercial Use that requires separate authorization from the Licensor under this License.
+
+A recipient of an Output-Derived Model distributed in compliance with this Section may use, modify, fine-tune, and further redistribute that Output-Derived Model for Non-Commercial Research Purposes, subject to this License and the requirements of this Section.
+
+10.3 Licensing of Independently Owned or Developed Components
+
+Nothing in this License transfers ownership of independently developed or independently owned code, parameters, data, documentation, task-specific heads, model components, or other materials to the Licensor.
+
+A distributor may separately license rights that the distributor owns or is otherwise authorized to license in independently developed or independently owned code, parameters, adapters, task-specific heads, data, documentation, model components, or other materials.
+
+To the extent that any adapter, parameter set, task-specific head, or other component also constitutes or forms part of a Derivative Model, Output-Derived Model, or other material subject to this License, a separate license may govern only those rights that the distributor independently owns or is otherwise authorized to license and may not displace the requirements of this License.
+
+Such separately licensed materials may be distributed under a license selected by the distributor, including a permissive open-source or other license, provided that the separate license:
+
+(a) applies only to rights that the distributor owns or is otherwise authorized to license;
+
+(b) does not supersede, modify, restrict, or replace this License with respect to rights governed by this License;
+
+(c) does not purport to grant any right in the RIBOSPAN Model Materials that the distributor does not possess;
+
+(d) does not purport to authorize Commercial Use that requires separate authorization from the Licensor under this License; and
+
+(e) clearly preserves the applicability of this License to any use, modification, or distribution that depends upon rights granted under this License.
+
+For clarity, the existence of a separate license governing independently owned or developed components does not remove or alter the restrictions applicable to the RIBOSPAN Model Materials, Derivative Models, Outputs, Output Derivatives, Output-Derived Models, or Separable Adaptations governed by this License.
+
+Nothing in this Section prevents successive researchers from independently developing, modifying, sharing, or redistributing permitted Derivative Models, Separable Adaptations, or Output-Derived Models for Non-Commercial Research Purposes, provided that each such person or entity independently complies with this License.
+
+11. RESTRICTED-ACCESS CHECKPOINTS
+
+A Restricted-Access Checkpoint is subject to the additional restrictions in this Section.
+
+11.1 No Redistribution
+
+You may not redistribute, transfer, publish, mirror, upload, share, or otherwise provide a Restricted-Access Checkpoint to another person or legal entity without prior written permission from the Licensor.
+
+11.2 Independent Access Requirement
+
+Each person or legal entity seeking access to a Restricted-Access Checkpoint must obtain access independently through an official distribution channel designated by the Licensor.
+
+11.3 No Access-Sharing
+
+You may not share authentication tokens, accounts, credentials, private download links, access keys, or other access mechanisms that permit another person or legal entity to access a Restricted-Access Checkpoint.
+
+11.4 Models and Adaptations Developed from Restricted-Access Checkpoints
+
+You may not distribute, without prior written permission from the Licensor, any full, merged, or otherwise self-contained Derivative Model created from or materially based on a Restricted-Access Checkpoint, including any full checkpoint produced through fine-tuning, continued pretraining, quantization, pruning, model conversion, model merging, or similar modification of a Restricted-Access Checkpoint. This restriction applies regardless of whether the parameters of the resulting Derivative Model are numerically identical to the parameters of the original Restricted-Access Checkpoint.
+
+For Non-Commercial Research Purposes, you may distribute Separable Adaptations developed from a Restricted-Access Checkpoint, including task-specific adapters, LoRA parameters, parameter-efficient fine-tuning modules, task-specific heads, or similar separable components, provided that:
+
+(a) the distributed materials do not include the underlying Restricted-Access Checkpoint or a substantial portion of its model parameters;
+
+(b) the distributed materials cannot reasonably be used by themselves to reconstruct, reproduce, or substitute for the underlying Restricted-Access Checkpoint;
+
+(c) where use of the distributed Separable Adaptation requires the underlying Restricted-Access Checkpoint, each recipient must obtain access to that checkpoint independently through an official distribution channel designated by the Licensor;
+
+(d) the Separable Adaptation is intended for a specialized downstream task and is not intended to reproduce, approximate, substitute for, or materially replicate substantial general-purpose capabilities of RIBOSPAN;
+
+(e) the distributor clearly identifies the Restricted-Access RIBOSPAN checkpoint from which the Separable Adaptation was developed;
+
+(f) the distributor prominently states, in the model card, README, repository page, or other primary distribution documentation, that the underlying Restricted-Access Checkpoint is not provided with the Separable Adaptation and must be independently obtained from an official RIBOSPAN distribution channel designated by the Licensor, and provides a clear reference to the applicable RIBOSPAN checkpoint and this License;
+
+(g) reasonable attribution to RIBOSPAN is provided;
+
+(h) the distribution includes a copy of, or a clear reference to, this License, and recipients are clearly informed that use of the Separable Adaptation and access to and use of the underlying Restricted-Access Checkpoint remain subject to the applicable terms of this License;
+
+(i) the distribution does not include substantial collections of Outputs prohibited under Section 11.5; and
+
+(j) the distribution otherwise complies with this License.
+
+For clarity, the preceding paragraph permits, for Non-Commercial Research Purposes, distribution of a task-specific package containing one or more permitted Separable Adaptations, such as LoRA parameters together with a task-specific prediction head, provided that the package satisfies the requirements above and does not contain the underlying Restricted-Access Checkpoint or a substantial portion of its parameters.
+
+A task-specific Output-Derived Model materially developed using Outputs or representations from a Restricted-Access Checkpoint may also be distributed for Non-Commercial Research Purposes, provided that:
+
+(a) the Output-Derived Model does not incorporate, reproduce, or contain parameters of the Restricted-Access Checkpoint;
+
+(b) the Output-Derived Model is designed for a specialized downstream task and is not intended to reproduce, approximate, substitute for, or materially replicate substantial general-purpose capabilities of RIBOSPAN;
+
+(c) the distribution does not include substantial collections of Outputs prohibited under Section 11.5;
+
+(d) the distributor clearly identifies that the model was materially developed using Outputs or representations generated by a Restricted-Access RIBOSPAN checkpoint;
+
+(e) reasonable attribution to RIBOSPAN is provided;
+
+(f) the distribution includes a copy of, or a clear reference to, this License, and access to or use of the Output-Derived Model is conditioned on the recipient's acceptance of the applicable terms of this License;
+
+(g) recipients are clearly informed that Commercial Use requires separate written authorization from the Licensor; and
+
+(h) the distribution otherwise complies with this License.
+
+Recipients of Separable Adaptations or Output-Derived Models distributed in compliance with this Section may use, modify, fine-tune, and further redistribute such materials for Non-Commercial Research Purposes, provided that:
+
+(a) the resulting materials continue to satisfy the applicable requirements of this Section;
+
+(b) no Restricted-Access Checkpoint, full or self-contained Derivative Model based on such checkpoint, or substantial portion of the underlying checkpoint's parameters is redistributed;
+
+(c) any person or entity requiring the underlying Restricted-Access Checkpoint obtains access to it independently in accordance with Section 11.2; and
+
+(d) the recipient otherwise complies with this License.
+
+Nothing in this Section permits a recipient of a Separable Adaptation or Output-Derived Model to obtain, reconstruct, receive, or access the underlying Restricted-Access Checkpoint through another user's account, credentials, authentication token, private link, access key, or other access mechanism.
+
+Commercial Use of any Derivative Model, Separable Adaptation, adapter, LoRA parameters, parameter-efficient fine-tuning module, task-specific head, Output-Derived Model, or other adaptation materially developed from or using a Restricted-Access Checkpoint requires a separate written commercial license from the Licensor.
+
+11.5 Systematic Distribution of Outputs
+
+Except with prior written permission from the Licensor, you may not systematically publish, distribute, transfer, or otherwise make available substantial collections of Outputs generated using a Restricted-Access Checkpoint where such distribution would materially enable others to reproduce, approximate, substitute for, or bypass the access restrictions applicable to that checkpoint.
+
+This Section does not restrict publication or distribution of reasonable portions of Outputs necessary to describe, evaluate, validate, or reproduce permitted Non-Commercial Research, including results reasonably necessary for scientific publications, benchmarks, supplementary materials, and research demonstrations.
+
+11.6 Security
+
+You must take reasonable technical and organizational measures to prevent unauthorized access to or redistribution of Restricted-Access Checkpoints.
+
+12. ATTRIBUTION
+
+Scientific publications, technical reports, public research demonstrations, and distributed Derivative Models, Separable Adaptations, or Output-Derived Models that materially use RIBOSPAN must provide reasonable attribution to RIBOSPAN.
+
+Where the Licensor has identified an associated RIBOSPAN scientific publication, academic work making material use of RIBOSPAN must cite that publication.
+
+Any permitted redistribution of RIBOSPAN Model Materials or Derivative Models must retain:
+
+(a) this License or a clear reference to this License where expressly permitted under Section 10 or Section 11.4;
+
+(b) applicable copyright notices; and
+
+(c) attribution notices supplied with the original Model Materials.
+
+Where an Output-Derived Model or Separable Adaptation is distributed as permitted under Section 10 or Section 11.4, the distributor must provide reasonable notice of the relevant RIBOSPAN checkpoint or RIBOSPAN Outputs or representations used in its development.
+
+The following notice may be used:
+
+"RIBOSPAN Model Materials are provided by Shanghai Innovation Institute under the RIBOSPAN Model Research & Non-Commercial License Agreement 1.0."
+
+13. TRADEMARKS AND PROJECT NAMES
+
+This License does not grant any right to use the names, marks, logos, or branding of:
+
+(a) Shanghai Innovation Institute;
+
+(b) RIBOSPAN;
+
+(c) RiboSpan; or
+
+(d) associated organizations,
+
+except as reasonably necessary for accurate factual attribution.
+
+You may not use such names or marks in a manner that implies endorsement, sponsorship, certification, partnership, or affiliation without prior written permission from the relevant rights holder.
+
+14. RESERVATION OF RIGHTS
+
+Except for the limited rights expressly granted in this License, the Licensor reserves all rights, title, and interest that it may hold in or relating to the RIBOSPAN Model Materials.
+
+No right or license is granted by implication, estoppel, or otherwise.
+
+Nothing in this License constitutes a waiver of any patent, copyright, trade-secret, contractual, trademark, database, or other right held by the Licensor.
+
+15. COMMERCIAL LICENSING
+
+The Licensor may separately authorize Commercial Use under individually negotiated terms.
+
+Nothing in this License limits the Licensor's ability to:
+
+(a) commercially license RIBOSPAN;
+
+(b) license RIBOSPAN under different terms;
+
+(c) grant field-of-use licenses;
+
+(d) enter into technology-transfer arrangements;
+
+(e) provide or authorize commercial hosted services;
+
+(f) license particular downstream applications;
+
+(g) license rights relating to particular biological or technological fields; or
+
+(h) otherwise commercialize RIBOSPAN or related technologies.
+
+A separate commercial agreement may include fees, royalties, milestones, field-of-use restrictions, sublicensing rights, technology-transfer terms, intellectual property provisions, or other negotiated conditions.
+
+16. THIRD-PARTY RIGHTS
+
+This License grants only those rights that the Licensor is authorized to grant in the RIBOSPAN Model Materials.
+
+Nothing in this License grants rights in third-party software, datasets, databases, biological sequences, biological materials, patents, trademarks, copyrights, or other third-party materials that may be used with, referenced by, incorporated into, or interoperable with RIBOSPAN.
+
+You are responsible for complying with applicable third-party licenses and rights.
+
+17. COMPLIANCE WITH LAW
+
+You are responsible for ensuring that your access to and use of the RIBOSPAN Model Materials, Derivative Models, Separable Adaptations, Output-Derived Models, Outputs, and Output Derivatives complies with applicable:
+
+(a) laws and regulations;
+
+(b) export-control and sanctions requirements;
+
+(c) institutional policies;
+
+(d) research ethics requirements; and
+
+(e) third-party rights.
+
+No permission is granted to use RIBOSPAN in violation of applicable law.
+
+18. TERMINATION
+
+18.1 Automatic Termination
+
+Your rights under this License terminate automatically upon a material violation of:
+
+(a) Section 3 (Commercial Use);
+
+(b) Section 5 (Model Distillation, Extraction, and Substitute Models);
+
+(c) Section 6 (Outputs, Output Derivatives, and Output-Derived Models);
+
+(d) Section 9 or Section 10 (Distribution and Licensing); or
+
+(e) Section 11 (Restricted-Access Checkpoints).
+
+18.2 Other Material Breaches
+
+For other material breaches, the Licensor may provide written notice of the breach.
+
+If the breach is not cured within thirty (30) days after receipt of notice, your rights under this License terminate.
+
+18.3 Effect of Termination
+
+Upon termination, you must:
+
+(a) cease use of the RIBOSPAN Model Materials;
+
+(b) cease exercising rights granted under this License;
+
+(c) delete or destroy copies of RIBOSPAN Model Materials in your possession or control, except where retention is required by applicable law;
+
+(d) cease use or distribution of Derivative Models or Separable Adaptations to the extent such use or distribution depends upon rights granted under this License;
+
+(e) cease use or distribution of Output-Derived Models to the extent such use or distribution depends upon rights granted under this License; and
+
+(f) cease any further use of Outputs or Output Derivatives where such use requires authorization under this License.
+
+Termination does not create or restore any commercial right in the RIBOSPAN Model Materials, Derivative Models, Separable Adaptations, Output-Derived Models, Outputs, or Output Derivatives that was not otherwise granted under a separate written agreement.
+
+Termination of rights granted under this License does not, by itself, terminate a separate license validly granted by a user with respect solely to independently owned or developed materials for which that user had authority to grant such license, except to the extent continued exercise of such separate license depends upon rights that have terminated under this License.
+
+18.4 Survival
+
+Sections concerning Commercial Use, model extraction and distillation, intellectual property, reservation of rights, termination, disclaimers, limitation of liability, governing law, and provisions that by their nature should survive termination shall survive termination.
+
+19. DISCLAIMER OF WARRANTIES
+
+THE RIBOSPAN MODEL MATERIALS ARE PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE LICENSOR DISCLAIMS ALL WARRANTIES, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, ACCURACY, RELIABILITY, SECURITY, AND PERFORMANCE.
+
+THE LICENSOR DOES NOT WARRANT THAT THE RIBOSPAN MODEL MATERIALS OR ANY OUTPUTS GENERATED THROUGH THEIR USE WILL BE ERROR-FREE, COMPLETE, ACCURATE, SAFE, OR SUITABLE FOR ANY PARTICULAR PURPOSE.
+
+20. LIMITATION OF LIABILITY
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE LICENSOR AND ITS PERSONNEL AND AUTHORIZED REPRESENTATIVES SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATING TO THE RIBOSPAN MODEL MATERIALS, DERIVATIVE MODELS, SEPARABLE ADAPTATIONS, OUTPUT-DERIVED MODELS, OUTPUTS, OUTPUT DERIVATIVES, OR THEIR USE.
+
+THIS INCLUDES, WITHOUT LIMITATION, LOSS OF PROFITS, REVENUE, DATA, GOODWILL, BUSINESS OPPORTUNITY, OR OTHER COMMERCIAL OR ECONOMIC LOSSES.
+
+WHERE LIABILITY CANNOT BE EXCLUDED UNDER APPLICABLE LAW, LIABILITY SHALL BE LIMITED TO THE MAXIMUM EXTENT PERMITTED BY LAW.
+
+21. NO ASSIGNMENT OR SUBLICENSE
+
+The rights granted to you by the Licensor under this License are personal to the individual or legal entity accepting this License.
+
+You may not assign, transfer, sublicense, or otherwise convey rights granted to you by the Licensor under this License to another person or legal entity without prior written permission from the Licensor.
+
+Distribution expressly permitted under Sections 9, 10, and 11.4 does not constitute an assignment, transfer, or sublicense of rights granted to you by the Licensor. A recipient of materials distributed in accordance with those Sections may independently exercise the rights available to that recipient under this License, subject to continued compliance with its terms.
+
+Nothing in this Section prevents a person or entity from licensing rights in independently owned or developed materials that it is authorized to license in accordance with Section 10.3.
+
+A recipient may further modify and redistribute permitted Derivative Models, Separable Adaptations, or Output-Derived Models for Non-Commercial Research Purposes where such modification or redistribution complies with this License.
+
+Where use of a distributed Separable Adaptation requires a Restricted-Access Checkpoint, the recipient's right to receive or use the Separable Adaptation does not grant access to the underlying checkpoint. The recipient must obtain access to that checkpoint independently in accordance with Section 11.
+
+A merger, acquisition, change in control, corporate restructuring, or transfer of substantially all relevant assets does not automatically transfer rights granted by the Licensor under this License.
+
+22. GOVERNING LAW
+
+This License shall be governed by and construed in accordance with the laws of the People's Republic of China.
+
+23. SEVERABILITY
+
+If any provision of this License is held invalid or unenforceable under applicable law, that provision shall be enforced to the maximum extent permitted by law, and the remaining provisions shall remain in full force and effect.
+
+24. NO WAIVER
+
+Failure by the Licensor to enforce any provision of this License does not constitute a waiver of that provision or of the Licensor's right to enforce that or any other provision in the future.
+
+25. ENTIRE AGREEMENT
+
+This License constitutes the agreement governing RIBOSPAN Model Materials expressly released under it, except where the Licensor and a user have entered into a separate written agreement governing the relevant use.
+
+A separate written agreement, including a commercial license, technology-transfer agreement, research agreement, or other written authorization, may supersede or modify this License solely for the activities covered by that agreement.
+
+A separate license granted by a user solely with respect to independently owned or developed materials for which that user has licensing authority does not modify or supersede this License with respect to any rights governed by this License.
+
+26. LICENSE VERSIONS
+
+The Licensor may publish future versions of this License.
+
+A later version does not automatically change the license applicable to RIBOSPAN Model Materials previously released under an earlier version unless the Licensor expressly states otherwise.
+
+Each RIBOSPAN checkpoint should identify the version of this License under which it is distributed.
+
+27. CONTACT AND COMMERCIAL INQUIRIES
+
+Questions concerning this License, requests for permissions outside its scope, and commercial licensing inquiries should be directed to the RIBOSPAN Team through the official contact information provided in the RIBOSPAN repository or associated model release pages.
+
+No permission outside the scope of this License, including authorization for redistribution otherwise prohibited under Section 11 or authorization for Commercial Use, is effective unless provided in writing by the Licensor or an authorized representative of the Licensor.
+
+Copyright © 2026 Shanghai Innovation Institute.
+All rights reserved except as expressly granted under this License.
+
+END OF LICENSE
