@@ -19,6 +19,8 @@ ribospan_benchmarks/
 
 `--weights-only` skips the conda env; `--env NAME` sets the env name (default `benchmark`). Public checkpoints land in `model_weights/`; place RIBOSPAN under `model_weights/RIBOSPAN-*/`.
 
+`setup.sh` only fetches third-party weights from their official release URLs; their use remains subject to the original providers' licenses and terms.
+
 Do not install packages by hand (`pip`, `conda install`, or `conda env create -f envs/benchmark.yml`) unless you know exactly what you are doing: `mamba-ssm` and `flash-attn` need the flags in `setup.sh`.
 
 ## Projects
