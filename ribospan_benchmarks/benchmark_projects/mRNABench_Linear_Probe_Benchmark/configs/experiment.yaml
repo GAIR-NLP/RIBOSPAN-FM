@@ -1,0 +1,119 @@
+schema_version: 1
+models_registry: configs/models.yaml
+output_root: outputs/mrnabench
+
+data:
+  root: data
+  names:
+    - rnahl-human
+    - rnahl-mouse
+    - mrl-sugimoto
+    - eclip-binding-k562
+    - eclip-binding-hepg2
+    - go-mf
+    - go-bp
+    - go-cc
+    - vep-traitgym-mendelian
+    - vep-traitgym-complex
+    - translation-efficiency-human
+    - translation-efficiency-mouse
+
+datasets:
+  rnahl-human:
+    family: HL
+    task: regression
+    split: homology
+    species: human
+    metric: r
+  rnahl-mouse:
+    family: HL
+    task: regression
+    split: homology
+    species: mouse
+    metric: r
+  mrl-sugimoto:
+    family: MRL
+    task: regression
+    split: homology
+    species: human
+    metric: r
+  eclip-binding-k562:
+    family: eCLIP
+    task: classification
+    split: homology
+    species: human
+    metric: auprc
+  eclip-binding-hepg2:
+    family: eCLIP
+    task: classification
+    split: homology
+    species: human
+    metric: auprc
+  go-mf:
+    family: GO
+    task: multilabel
+    split: homology
+    species: human
+    metric: auprc
+  go-bp:
+    family: GO
+    task: multilabel
+    split: homology
+    species: human
+    metric: auprc
+  go-cc:
+    family: GO
+    task: multilabel
+    split: homology
+    species: human
+    metric: auprc
+  vep-traitgym-mendelian:
+    family: VEP
+    task: classification
+    split: default
+    species: human
+    metric: auprc
+  vep-traitgym-complex:
+    family: VEP
+    task: classification
+    split: default
+    species: human
+    metric: auprc
+  translation-efficiency-human:
+    family: TE
+    task: regression
+    split: homology
+    species: human
+    metric: r
+  translation-efficiency-mouse:
+    family: TE
+    task: regression
+    split: homology
+    species: mouse
+    metric: r
+
+models:
+  names:
+    - RNA-FM
+    - RiNALMo
+    - AIDO.RNA-CDS
+    - HydraRNA
+    - RIBOSPAN-1K-15
+    - RIBOSPAN-1K-40
+    - RIBOSPAN-10K-15
+    - RIBOSPAN-10K-40
+  device: cuda:0
+  dtype: bfloat16
+  skip_existing: true
+
+probe:
+  seeds: [2541, 413, 411, 412, 2547, 321, 421, 311, 2516, 2515]
+  split_ratios: [0.7, 0.15, 0.15]
+  regressor: ridge
+  ridge_alphas: [0.001, 0.01, 0.1, 1.0, 10.0]
+  eval_split: val
+  report_test: true
+
+chunking:
+  mode: concat_then_mean
+  overlap: 0

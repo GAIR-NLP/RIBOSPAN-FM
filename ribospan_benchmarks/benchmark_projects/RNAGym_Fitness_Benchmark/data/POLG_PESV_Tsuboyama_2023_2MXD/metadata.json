@@ -1,0 +1,12 @@
+{
+  "dataset_id": "POLG_PESV_Tsuboyama_2023_2MXD",
+  "rna_type": "mRNA-coding",
+  "wt_sequence": "GCTCTCCGTGATGACGAATATGACGAGTGGCAGGACATCATCCGTGACTGGCGTAAAGAAATGACCGTTCAGCAGTTCCTCGACCTGAAAGAACGTGCGCTGTCTGGTGCGTCTGACCCGGACTCTCAGCGTTACAACGCTTGGCTCGAACTGCGTGCT",
+  "wt_length": 159,
+  "n_raw": 6287,
+  "n_mutants": 6285,
+  "n_skipped": 0,
+  "n_single": 0,
+  "n_multiple": 6285,
+  "source_csv": "POLG_PESV_Tsuboyama_2023_2MXD.csv"
+}

@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Janzen_2022_fam31_ribozyme",
+  "rna_type": "Ribozyme",
+  "wt_sequence": "GGGAATGGATCCACATCTACGAATTCAAGTTTGCTAATAGTCGCAAGTTCACTGCAGACTTGACGAAGCTG",
+  "wt_length": 71,
+  "n_raw": 1953,
+  "n_mutants": 1953,
+  "n_skipped": 0,
+  "n_single": 63,
+  "n_multiple": 1890,
+  "source_csv": "Janzen_2022_fam31_ribozyme.csv"
+}

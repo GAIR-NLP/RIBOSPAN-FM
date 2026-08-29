@@ -102,7 +102,7 @@ python -m pip install \
   --extra-index-url https://download.pytorch.org/whl/cu124 \
   torch==2.6.0 transformers==4.38.0 tokenizers==0.15.2 numpy==1.26.4 \
   rna-fm==0.2.2 ml-collections==1.1.0 \
-  pyyaml pandas scikit-learn matplotlib seaborn tqdm einops scipy opentsne pytest \
+  pyyaml pandas pyarrow scikit-learn matplotlib seaborn tqdm einops scipy opentsne pytest \
   ninja packaging hydra-core omegaconf bitarray sacrebleu regex
 MAMBA_SKIP_CUDA_BUILD=TRUE python -m pip install mamba-ssm==2.2.2 --no-build-isolation
 python - <<'PY'

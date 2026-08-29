@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Zhang_2020_cpeb3_ribozyme",
+  "rna_type": "Ribozyme",
+  "wt_sequence": "TAACAGGGGGCCACAGCAGAAGCGTTCACGTCGCAGCCCCTGTCAGATTCTGGTGAATCTGCGAATTCTGCTGTATATCTC",
+  "wt_length": 81,
+  "n_raw": 111417,
+  "n_mutants": 111417,
+  "n_skipped": 0,
+  "n_single": 243,
+  "n_multiple": 111174,
+  "source_csv": "Zhang_2020_cpeb3_ribozyme.csv"
+}

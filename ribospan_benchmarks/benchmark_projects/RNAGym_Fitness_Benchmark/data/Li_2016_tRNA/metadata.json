@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Li_2016_tRNA",
+  "rna_type": "tRNA",
+  "wt_sequence": "GTTCCGTTGGCGTAATGGTAACGCGTCTCCCTCCTAAGGAGAAGACTGCGGGTTCGAGTCCCGTACGGAACG",
+  "wt_length": 72,
+  "n_raw": 65536,
+  "n_mutants": 65536,
+  "n_skipped": 0,
+  "n_single": 207,
+  "n_multiple": 65329,
+  "source_csv": "Li_2016_tRNA.csv"
+}

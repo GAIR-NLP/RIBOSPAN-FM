@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Julien_2016_mRNA",
+  "rna_type": "mRNA-splicing",
+  "wt_sequence": "GATCCAGATCTAACTTGGGGTGGCTTTGTCTTCTTCTTTTGCCAATTCCACTAATTGTTTGGG",
+  "wt_length": 63,
+  "n_raw": 189,
+  "n_mutants": 189,
+  "n_skipped": 0,
+  "n_single": 189,
+  "n_multiple": 0,
+  "source_csv": "Julien_2016_mRNA.csv"
+}

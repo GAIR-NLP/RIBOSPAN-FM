@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Zhang_2024_OR4K15_ribozyme",
+  "rna_type": "Ribozyme",
+  "wt_sequence": "GTTAACGGTCATAGGCCATGGAAACTAGGAGCACCATTTCGCTGCCAGTGAAGAAATGAACAAAGAAAATCTGGGCCAGGCAGGCATCAAAAGAAATAGTCTTGCGCTCAACCAGAAAGTCTGTAATCATTTTAAGGGTA",
+  "wt_length": 140,
+  "n_raw": 61393,
+  "n_mutants": 61393,
+  "n_skipped": 0,
+  "n_single": 410,
+  "n_multiple": 60983,
+  "source_csv": "Zhang_2024_OR4K15_ribozyme.csv"
+}

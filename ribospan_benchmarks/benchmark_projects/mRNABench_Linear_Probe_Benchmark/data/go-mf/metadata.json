@@ -1,0 +1,48 @@
+{
+  "dataset_id": "go-mf",
+  "n_rows": 5737,
+  "columns": [
+    "row_index",
+    "gene",
+    "chromosome",
+    "sequence",
+    "cds",
+    "splice",
+    "target",
+    "length"
+  ],
+  "task": "multilabel",
+  "target_cols": [
+    "target"
+  ],
+  "source_target_cols": [
+    "target"
+  ],
+  "target_source": "dataset_info",
+  "stacked_multilabel": false,
+  "split_type": "homology",
+  "species": "human",
+  "metric": "auprc",
+  "seeds": [
+    2541,
+    413,
+    411,
+    412,
+    2547,
+    321,
+    421,
+    311,
+    2516,
+    2515
+  ],
+  "split_ratios": [
+    0.7,
+    0.15,
+    0.15
+  ],
+  "optional": false,
+  "length_mean": 3596.577130904654,
+  "length_max": 12236,
+  "n_split_rows": 57370,
+  "family": "GO"
+}

@@ -1,0 +1,43 @@
+{
+  "dataset_id": "rnahl-mouse",
+  "n_rows": 13723,
+  "columns": [
+    "row_index",
+    "gene",
+    "chromosome",
+    "sequence",
+    "cds",
+    "splice",
+    "target",
+    "length"
+  ],
+  "task": "regression",
+  "target_cols": [
+    "target"
+  ],
+  "split_type": "homology",
+  "species": "mouse",
+  "metric": "r",
+  "seeds": [
+    2541,
+    413,
+    411,
+    412,
+    2547,
+    321,
+    421,
+    311,
+    2516,
+    2515
+  ],
+  "split_ratios": [
+    0.7,
+    0.15,
+    0.15
+  ],
+  "optional": false,
+  "length_mean": 3354.4641113459156,
+  "length_max": 12288,
+  "n_split_rows": 137230,
+  "family": "HL"
+}

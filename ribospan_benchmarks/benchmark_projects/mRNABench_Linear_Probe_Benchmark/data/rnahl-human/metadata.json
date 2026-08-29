@@ -1,0 +1,43 @@
+{
+  "dataset_id": "rnahl-human",
+  "n_rows": 12939,
+  "columns": [
+    "row_index",
+    "gene",
+    "chromosome",
+    "sequence",
+    "cds",
+    "splice",
+    "target",
+    "length"
+  ],
+  "task": "regression",
+  "target_cols": [
+    "target"
+  ],
+  "split_type": "homology",
+  "species": "human",
+  "metric": "r",
+  "seeds": [
+    2541,
+    413,
+    411,
+    412,
+    2547,
+    321,
+    421,
+    311,
+    2516,
+    2515
+  ],
+  "split_ratios": [
+    0.7,
+    0.15,
+    0.15
+  ],
+  "optional": false,
+  "length_mean": 3755.670608238658,
+  "length_max": 12288,
+  "n_split_rows": 129390,
+  "family": "HL"
+}

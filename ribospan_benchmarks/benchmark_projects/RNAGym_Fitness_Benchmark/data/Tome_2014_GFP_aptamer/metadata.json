@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Tome_2014_GFP_aptamer",
+  "rna_type": "Aptamer",
+  "wt_sequence": "GCTTCTGGACTGCGATGGGAGCACGAAACGTCGTGGCGCAATTGGGTGGGGAAAGTCCTTAAAAGAGGGCCACCACAGAAGC",
+  "wt_length": 82,
+  "n_raw": 417,
+  "n_mutants": 417,
+  "n_skipped": 0,
+  "n_single": 236,
+  "n_multiple": 181,
+  "source_csv": "Tome_2014_GFP_aptamer.csv"
+}

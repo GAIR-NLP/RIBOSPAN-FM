@@ -1,0 +1,390 @@
+schema_version: 1
+models_registry: configs/models.yaml
+output_root: outputs/rnagym_fitness
+
+data:
+  root: data
+  default_group: all
+  names:
+    - Andreasson_2020_ribozyme
+    - Beck_2022_ribozyme
+    - Domingo_2018_tRNA
+    - Guy_2014_tRNA
+    - Janzen_2022_fam1a1_ribozyme
+    - Janzen_2022_fam1b1_ribozyme
+    - Janzen_2022_fam21_ribozyme
+    - Janzen_2022_fam22_ribozyme
+    - Janzen_2022_fam31_ribozyme
+    - Julien_2016_mRNA
+    - Ke_2017_mRNA
+    - Kobori_2015_ribozyme_j12
+    - Kobori_2015_ribozyme_p4
+    - Kobori_2015_ribozyme_tw
+    - Kobori_2018_ribozyme
+    - Li_2016_tRNA
+    - Peri_2022_ribozyme
+    - Pitt_2010_ribozyme
+    - Roberts_2023_cepeb3_ribozyme
+    - Roberts_2023_HDV_ribozyme
+    - Roberts_2023_hh_ribozyme
+    - Roberts_2023_hp_ribozyme
+    - Roberts_2023_tw_ribozyme
+    - Soo_2021_ribozyme
+    - Tome_2014_GFP_aptamer
+    - Tome_2014_NELFE_aptamer
+    - Zhang_2020_cpeb3_ribozyme
+    - Zhang_2024_line1_mini_ribozyme
+    - Zhang_2024_line1_full_ribozyme
+    - Zhang_2024_OR4K15_ribozyme
+    - McRae_2024_5tu_ribozyme
+    - McRae_2024_t1_ribozyme
+    - Kobori_2016_osa_ribozyme
+    - BLAT_ECOLX_Firnberg_2014
+    - BLAT_ECOLX_Jacquier_2013
+    - CCDB_ECOLI_Adkar_2012
+    - IF1_ECOLI_Kelsic_2016
+    - RNC_ECOLI_Weeks_2023
+    - F7YBW8_MESOW_Ding_2023
+    - Q837P4_ENTFA_Meier_2023
+    - MLAC_ECOLI_MacRae_2023
+    - ESTA_BACSU_Nutschel_2020
+    - GFP_AEQVI_Sarkisyan_2016
+    - DLG4_RAT_McLaughlin_2012
+    - OXDA_RHOTO_Vanella_2023_activity
+    - P53_HUMAN_Kotler_2018
+    - BRCA1_HUMAN_Findlay_2018
+    - SPIKE_SARS2_Starr_2020_binding
+    - C6KNH7_9INFA_Lee_2018
+    - PSAE_PICP2_Tsuboyama_2023_1PSE
+    - BCHB_CHLTE_Tsuboyama_2023_2KRU
+    - DOCK1_MOUSE_Tsuboyama_2023_2M0Y
+    - SPTN1_CHICK_Tsuboyama_2023_1TUD
+    - HECD1_HUMAN_Tsuboyama_2023_3DKM
+    - PKN1_HUMAN_Tsuboyama_2023_1URF
+    - RCRO_LAMBD_Tsuboyama_2023_1ORC
+    - POLG_PESV_Tsuboyama_2023_2MXD
+    - SR43C_ARATH_Tsuboyama_2023_2N88
+    - OBSCN_HUMAN_Tsuboyama_2023_1V1C
+    - CALM1_HUMAN_Weile_2017
+    - PTEN_HUMAN_Mighell_2018
+    - CBS_HUMAN_Sun_2020
+    - SUMO1_HUMAN_Weile_2017
+    - MTHR_HUMAN_Weile_2021
+    - POLG_DEN26_Suphatrakul_2023
+    - RDRP_I33A0_Li_2023
+    - R1AB_SARS2_Flynn_2022
+    - A0A2Z5U3Z0_9INFA_Doud_2016
+    - TAT_HV1BR_Fernandes_2016
+    - CAPSD_AAV2S_Sinai_2021
+  groups:
+    smoke:
+      - Roberts_2023_hh_ribozyme
+      - Domingo_2018_tRNA
+      - Tome_2014_GFP_aptamer
+      - Ke_2017_mRNA
+      - IF1_ECOLI_Kelsic_2016
+    ribozyme:
+      - Andreasson_2020_ribozyme
+      - Beck_2022_ribozyme
+      - Janzen_2022_fam1a1_ribozyme
+      - Janzen_2022_fam1b1_ribozyme
+      - Janzen_2022_fam21_ribozyme
+      - Janzen_2022_fam22_ribozyme
+      - Janzen_2022_fam31_ribozyme
+      - Kobori_2015_ribozyme_j12
+      - Kobori_2015_ribozyme_p4
+      - Kobori_2015_ribozyme_tw
+      - Kobori_2018_ribozyme
+      - Peri_2022_ribozyme
+      - Pitt_2010_ribozyme
+      - Roberts_2023_cepeb3_ribozyme
+      - Roberts_2023_HDV_ribozyme
+      - Roberts_2023_hh_ribozyme
+      - Roberts_2023_hp_ribozyme
+      - Roberts_2023_tw_ribozyme
+      - Soo_2021_ribozyme
+      - Zhang_2020_cpeb3_ribozyme
+      - Zhang_2024_line1_mini_ribozyme
+      - Zhang_2024_line1_full_ribozyme
+      - Zhang_2024_OR4K15_ribozyme
+      - McRae_2024_5tu_ribozyme
+      - McRae_2024_t1_ribozyme
+      - Kobori_2016_osa_ribozyme
+    trna:
+      - Domingo_2018_tRNA
+      - Guy_2014_tRNA
+      - Li_2016_tRNA
+    aptamer:
+      - Tome_2014_GFP_aptamer
+      - Tome_2014_NELFE_aptamer
+    mrna-coding:
+      - BLAT_ECOLX_Firnberg_2014
+      - BLAT_ECOLX_Jacquier_2013
+      - CCDB_ECOLI_Adkar_2012
+      - IF1_ECOLI_Kelsic_2016
+      - RNC_ECOLI_Weeks_2023
+      - F7YBW8_MESOW_Ding_2023
+      - Q837P4_ENTFA_Meier_2023
+      - MLAC_ECOLI_MacRae_2023
+      - ESTA_BACSU_Nutschel_2020
+      - GFP_AEQVI_Sarkisyan_2016
+      - DLG4_RAT_McLaughlin_2012
+      - OXDA_RHOTO_Vanella_2023_activity
+      - P53_HUMAN_Kotler_2018
+      - BRCA1_HUMAN_Findlay_2018
+      - SPIKE_SARS2_Starr_2020_binding
+      - C6KNH7_9INFA_Lee_2018
+      - PSAE_PICP2_Tsuboyama_2023_1PSE
+      - BCHB_CHLTE_Tsuboyama_2023_2KRU
+      - DOCK1_MOUSE_Tsuboyama_2023_2M0Y
+      - SPTN1_CHICK_Tsuboyama_2023_1TUD
+      - HECD1_HUMAN_Tsuboyama_2023_3DKM
+      - PKN1_HUMAN_Tsuboyama_2023_1URF
+      - RCRO_LAMBD_Tsuboyama_2023_1ORC
+      - POLG_PESV_Tsuboyama_2023_2MXD
+      - SR43C_ARATH_Tsuboyama_2023_2N88
+      - OBSCN_HUMAN_Tsuboyama_2023_1V1C
+      - CALM1_HUMAN_Weile_2017
+      - PTEN_HUMAN_Mighell_2018
+      - CBS_HUMAN_Sun_2020
+      - SUMO1_HUMAN_Weile_2017
+      - MTHR_HUMAN_Weile_2021
+      - POLG_DEN26_Suphatrakul_2023
+      - RDRP_I33A0_Li_2023
+      - R1AB_SARS2_Flynn_2022
+      - A0A2Z5U3Z0_9INFA_Doud_2016
+      - TAT_HV1BR_Fernandes_2016
+      - CAPSD_AAV2S_Sinai_2021
+    mrna-splicing:
+      - Julien_2016_mRNA
+      - Ke_2017_mRNA
+
+datasets:
+  Andreasson_2020_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 74
+  Beck_2022_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 69
+  Domingo_2018_tRNA:
+    rna_type: tRNA
+    wt_length: 72
+  Guy_2014_tRNA:
+    rna_type: tRNA
+    wt_length: 105
+  Janzen_2022_fam1a1_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 71
+  Janzen_2022_fam1b1_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 71
+  Janzen_2022_fam21_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 71
+  Janzen_2022_fam22_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 71
+  Janzen_2022_fam31_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 71
+  Julien_2016_mRNA:
+    rna_type: mRNA-splicing
+    wt_length: 63
+  Ke_2017_mRNA:
+    rna_type: mRNA-splicing
+    wt_length: 51
+  Kobori_2015_ribozyme_j12:
+    rna_type: Ribozyme
+    wt_length: 230
+  Kobori_2015_ribozyme_p4:
+    rna_type: Ribozyme
+    wt_length: 190
+  Kobori_2015_ribozyme_tw:
+    rna_type: Ribozyme
+    wt_length: 77
+  Kobori_2018_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 160
+  Li_2016_tRNA:
+    rna_type: tRNA
+    wt_length: 72
+  Peri_2022_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 197
+  Pitt_2010_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 87
+  Roberts_2023_cepeb3_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 69
+  Roberts_2023_HDV_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 87
+  Roberts_2023_hh_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 45
+  Roberts_2023_hp_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 71
+  Roberts_2023_tw_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 48
+  Soo_2021_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 425
+  Tome_2014_GFP_aptamer:
+    rna_type: Aptamer
+    wt_length: 82
+  Tome_2014_NELFE_aptamer:
+    rna_type: Aptamer
+    wt_length: 70
+  Zhang_2020_cpeb3_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 81
+  Zhang_2024_line1_mini_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 46
+  Zhang_2024_line1_full_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 146
+  Zhang_2024_OR4K15_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 140
+  McRae_2024_5tu_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 152
+  McRae_2024_t1_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 135
+  Kobori_2016_osa_ribozyme:
+    rna_type: Ribozyme
+    wt_length: 54
+  BLAT_ECOLX_Firnberg_2014:
+    rna_type: mRNA-coding
+    wt_length: 861
+  BLAT_ECOLX_Jacquier_2013:
+    rna_type: mRNA-coding
+    wt_length: 861
+  CCDB_ECOLI_Adkar_2012:
+    rna_type: mRNA-coding
+    wt_length: 306
+  IF1_ECOLI_Kelsic_2016:
+    rna_type: mRNA-coding
+    wt_length: 219
+  RNC_ECOLI_Weeks_2023:
+    rna_type: mRNA-coding
+    wt_length: 681
+  F7YBW8_MESOW_Ding_2023:
+    rna_type: mRNA-coding
+    wt_length: 282
+  Q837P4_ENTFA_Meier_2023:
+    rna_type: mRNA-coding
+    wt_length: 1770
+  MLAC_ECOLI_MacRae_2023:
+    rna_type: mRNA-coding
+    wt_length: 636
+  ESTA_BACSU_Nutschel_2020:
+    rna_type: mRNA-coding
+    wt_length: 639
+  GFP_AEQVI_Sarkisyan_2016:
+    rna_type: mRNA-coding
+    wt_length: 717
+  DLG4_RAT_McLaughlin_2012:
+    rna_type: mRNA-coding
+    wt_length: 2175
+  OXDA_RHOTO_Vanella_2023_activity:
+    rna_type: mRNA-coding
+    wt_length: 1092
+  P53_HUMAN_Kotler_2018:
+    rna_type: mRNA-coding
+    wt_length: 1182
+  BRCA1_HUMAN_Findlay_2018:
+    rna_type: mRNA-coding
+    wt_length: 5592
+  SPIKE_SARS2_Starr_2020_binding:
+    rna_type: mRNA-coding
+    wt_length: 3822
+  C6KNH7_9INFA_Lee_2018:
+    rna_type: mRNA-coding
+    wt_length: 1701
+  PSAE_PICP2_Tsuboyama_2023_1PSE:
+    rna_type: mRNA-coding
+    wt_length: 204
+  BCHB_CHLTE_Tsuboyama_2023_2KRU:
+    rna_type: mRNA-coding
+    wt_length: 156
+  DOCK1_MOUSE_Tsuboyama_2023_2M0Y:
+    rna_type: mRNA-coding
+    wt_length: 198
+  SPTN1_CHICK_Tsuboyama_2023_1TUD:
+    rna_type: mRNA-coding
+    wt_length: 180
+  HECD1_HUMAN_Tsuboyama_2023_3DKM:
+    rna_type: mRNA-coding
+    wt_length: 216
+  PKN1_HUMAN_Tsuboyama_2023_1URF:
+    rna_type: mRNA-coding
+    wt_length: 213
+  RCRO_LAMBD_Tsuboyama_2023_1ORC:
+    rna_type: mRNA-coding
+    wt_length: 189
+  POLG_PESV_Tsuboyama_2023_2MXD:
+    rna_type: mRNA-coding
+    wt_length: 159
+  SR43C_ARATH_Tsuboyama_2023_2N88:
+    rna_type: mRNA-coding
+    wt_length: 144
+  OBSCN_HUMAN_Tsuboyama_2023_1V1C:
+    rna_type: mRNA-coding
+    wt_length: 195
+  CALM1_HUMAN_Weile_2017:
+    rna_type: mRNA-coding
+    wt_length: 450
+  PTEN_HUMAN_Mighell_2018:
+    rna_type: mRNA-coding
+    wt_length: 1212
+  CBS_HUMAN_Sun_2020:
+    rna_type: mRNA-coding
+    wt_length: 1656
+  SUMO1_HUMAN_Weile_2017:
+    rna_type: mRNA-coding
+    wt_length: 306
+  MTHR_HUMAN_Weile_2021:
+    rna_type: mRNA-coding
+    wt_length: 1971
+  POLG_DEN26_Suphatrakul_2023:
+    rna_type: mRNA-coding
+    wt_length: 2700
+  RDRP_I33A0_Li_2023:
+    rna_type: mRNA-coding
+    wt_length: 2271
+  R1AB_SARS2_Flynn_2022:
+    rna_type: mRNA-coding
+    wt_length: 918
+  A0A2Z5U3Z0_9INFA_Doud_2016:
+    rna_type: mRNA-coding
+    wt_length: 1695
+  TAT_HV1BR_Fernandes_2016:
+    rna_type: mRNA-coding
+    wt_length: 258
+  CAPSD_AAV2S_Sinai_2021:
+    rna_type: mRNA-coding
+    wt_length: 2208
+
+models:
+  names:
+    - RNA-FM
+    - RiNALMo
+    - AIDO.RNA-CDS
+    - HydraRNA
+    - RIBOSPAN-1K-15
+    - RIBOSPAN-1K-40
+    - RIBOSPAN-10K-15
+    - RIBOSPAN-10K-40
+  device: cuda:0
+  dtype: bfloat16
+  skip_existing: true
+
+scoring:
+  strategy: masked-marginals
+  batch_size: 8

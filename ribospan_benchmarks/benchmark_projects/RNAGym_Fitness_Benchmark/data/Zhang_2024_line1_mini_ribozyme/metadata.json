@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Zhang_2024_line1_mini_ribozyme",
+  "rna_type": "Ribozyme",
+  "wt_sequence": "GGCAGAGCTCAACACAGCGTGGCAAAGTGGCTGTGGCTAGACTGCC",
+  "wt_length": 46,
+  "n_raw": 149710,
+  "n_mutants": 149710,
+  "n_skipped": 0,
+  "n_single": 138,
+  "n_multiple": 149572,
+  "source_csv": "Zhang_2024_line1_mini_ribozyme.csv"
+}

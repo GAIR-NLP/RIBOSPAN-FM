@@ -1,0 +1,50 @@
+{
+  "dataset_id": "vep-traitgym-mendelian",
+  "n_rows": 2616,
+  "columns": [
+    "row_index",
+    "transcript_id",
+    "gene",
+    "chromosome",
+    "sequence",
+    "cds",
+    "splice",
+    "target",
+    "description",
+    "length"
+  ],
+  "task": "classification",
+  "target_cols": [
+    "target"
+  ],
+  "source_target_cols": [
+    "target"
+  ],
+  "target_source": "dataset_info",
+  "stacked_multilabel": false,
+  "split_type": "default",
+  "species": "human",
+  "metric": "auprc",
+  "seeds": [
+    2541,
+    413,
+    411,
+    412,
+    2547,
+    321,
+    421,
+    311,
+    2516,
+    2515
+  ],
+  "split_ratios": [
+    0.7,
+    0.15,
+    0.15
+  ],
+  "optional": false,
+  "length_mean": 3357.750382262997,
+  "length_max": 28227,
+  "n_split_rows": 26160,
+  "family": "VEP"
+}

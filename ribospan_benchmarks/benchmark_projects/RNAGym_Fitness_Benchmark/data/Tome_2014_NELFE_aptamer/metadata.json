@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Tome_2014_NELFE_aptamer",
+  "rna_type": "Aptamer",
+  "wt_sequence": "CCCAACGACTGCCGAGCGAGATTACGCTTGAGCGCCCCACTGAGGATGCCCACGGGCGATTGGGGCACGG",
+  "wt_length": 70,
+  "n_raw": 2652,
+  "n_mutants": 2652,
+  "n_skipped": 0,
+  "n_single": 210,
+  "n_multiple": 2442,
+  "source_csv": "Tome_2014_NELFE_aptamer.csv"
+}

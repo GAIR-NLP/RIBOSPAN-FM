@@ -1,0 +1,49 @@
+{
+  "dataset_id": "translation-efficiency-mouse",
+  "n_rows": 10853,
+  "columns": [
+    "row_index",
+    "transcript_id",
+    "gene",
+    "chromosome",
+    "sequence",
+    "cds",
+    "splice",
+    "target",
+    "length"
+  ],
+  "task": "regression",
+  "target_cols": [
+    "target"
+  ],
+  "source_target_cols": [
+    "target"
+  ],
+  "target_source": "spec",
+  "stacked_multilabel": false,
+  "split_type": "homology",
+  "species": "mouse",
+  "metric": "r",
+  "seeds": [
+    2541,
+    413,
+    411,
+    412,
+    2547,
+    321,
+    421,
+    311,
+    2516,
+    2515
+  ],
+  "split_ratios": [
+    0.7,
+    0.15,
+    0.15
+  ],
+  "optional": false,
+  "length_mean": 3557.300193494886,
+  "length_max": 12252,
+  "n_split_rows": 108530,
+  "family": "TE"
+}

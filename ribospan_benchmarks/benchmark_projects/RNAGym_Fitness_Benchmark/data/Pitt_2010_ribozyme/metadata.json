@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Pitt_2010_ribozyme",
+  "rna_type": "Ribozyme",
+  "wt_sequence": "GGAACACTATCCGACTGCGGTCGGTGGAGATGTATAGTCTTAGGGTGAGGCTGGAGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT",
+  "wt_length": 87,
+  "n_raw": 186,
+  "n_mutants": 162,
+  "n_skipped": 0,
+  "n_single": 162,
+  "n_multiple": 0,
+  "source_csv": "Pitt_2010_ribozyme.csv"
+}

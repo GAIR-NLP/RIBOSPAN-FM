@@ -1,0 +1,42 @@
+schema_version: 1
+models_root: ../../../model_weights
+models:
+  - name: RNA-FM
+    source_path: RNA-FM
+    context_window: 1024
+    backend: rnafm
+
+  - name: RiNALMo
+    source_path: RiNALMo
+    context_window: 1024
+    backend: rinalmo
+
+  - name: AIDO.RNA-CDS
+    source_path: AIDO.RNA-CDS
+    context_window: 1024
+    backend: rnabert
+
+  - name: HydraRNA
+    source_path: HydraRNA
+    context_window: 10240
+    backend: hydrarna
+
+  - name: RIBOSPAN-1K-15
+    source_path: RIBOSPAN-1K-15
+    context_window: 1024
+    backend: ribospan
+
+  - name: RIBOSPAN-1K-40
+    source_path: RIBOSPAN-1K-40
+    context_window: 1024
+    backend: ribospan
+
+  - name: RIBOSPAN-10K-15
+    source_path: RIBOSPAN-10K-15
+    context_window: 10240
+    backend: ribospan
+
+  - name: RIBOSPAN-10K-40
+    source_path: RIBOSPAN-10K-40
+    context_window: 10240
+    backend: ribospan

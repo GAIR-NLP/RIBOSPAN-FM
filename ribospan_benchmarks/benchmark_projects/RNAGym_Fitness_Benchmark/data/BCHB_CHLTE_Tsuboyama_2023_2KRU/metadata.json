@@ -1,0 +1,12 @@
+{
+  "dataset_id": "BCHB_CHLTE_Tsuboyama_2023_2KRU",
+  "rna_type": "mRNA-coding",
+  "wt_sequence": "GAGCTGTCTTGGACCGCTGAGGCGGAGAAGATGCTGGGTAAAGTGCCATTCTTCGTGCGCAAGAAAGTTCGTAAAAACACCGACAACTACGCTCGTGAAATCGGTGAACCAGTTGTTACTGCTGATGTGTTCCGTAAAGCGAAAGAACACCTGGGT",
+  "wt_length": 156,
+  "n_raw": 1652,
+  "n_mutants": 1652,
+  "n_skipped": 0,
+  "n_single": 0,
+  "n_multiple": 1652,
+  "source_csv": "BCHB_CHLTE_Tsuboyama_2023_2KRU.csv"
+}

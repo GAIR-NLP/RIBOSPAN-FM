@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Roberts_2023_cepeb3_ribozyme",
+  "rna_type": "Ribozyme",
+  "wt_sequence": "GGGGGCCACAGCAGAAGCGTTCACGTCGCGGCCCCTGTCAGATTCTGGTGAATCTGCGAATTCTGCTGT",
+  "wt_length": 69,
+  "n_raw": 21321,
+  "n_mutants": 21321,
+  "n_skipped": 0,
+  "n_single": 207,
+  "n_multiple": 21114,
+  "source_csv": "Roberts_2023_cepeb3_ribozyme.csv"
+}

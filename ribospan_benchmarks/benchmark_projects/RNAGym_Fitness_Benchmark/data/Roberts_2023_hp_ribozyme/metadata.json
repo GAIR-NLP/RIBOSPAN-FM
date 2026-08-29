@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Roberts_2023_hp_ribozyme",
+  "rna_type": "Ribozyme",
+  "wt_sequence": "GTCCTCTTTCACGTGCGCGTGAAAGAGAGAAGTGAACCAGAGAAACACACGTTGTGGTATATTACCTGGTA",
+  "wt_length": 71,
+  "n_raw": 22578,
+  "n_mutants": 22578,
+  "n_skipped": 0,
+  "n_single": 213,
+  "n_multiple": 22365,
+  "source_csv": "Roberts_2023_hp_ribozyme.csv"
+}

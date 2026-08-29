@@ -1,0 +1,12 @@
+{
+  "dataset_id": "McRae_2024_5tu_ribozyme",
+  "rna_type": "Ribozyme",
+  "wt_sequence": "GGATCTTCTCGATCTAACAAAAAAGACAAATCTGCCACAAAGCTTGAGAGCATCTTCGGATGCAGAGGCGGCAGCCTTCGGTGGCGCGATAGCGCCAACGTTCTCAACTATGACACGCAAAACGCGTGCTCCGTTGAATGGAGTTTATCATG",
+  "wt_length": 152,
+  "n_raw": 74942,
+  "n_mutants": 74942,
+  "n_skipped": 0,
+  "n_single": 449,
+  "n_multiple": 74493,
+  "source_csv": "McRae_2024_5tu_ribozyme.csv"
+}

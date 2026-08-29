@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Peri_2022_ribozyme",
+  "rna_type": "Ribozyme",
+  "wt_sequence": "GTGCCTTGCGCCGGGAAACCACGCAAGGGATGGTGTCAAATTCGGCGAAACCTAAGCGCCCGCCCGGGCGTATGGCAACGCCGAGCCAAGCTTCGGCGCCTGCGCCGATGAAGGTGTAGAGACTAGACGGCACCCACCTAAGGCAAACGCTATGGTGAAGGCATAGTCCAGGGAGTGGCGAAAGTCACACAAACCGG",
+  "wt_length": 197,
+  "n_raw": 16383,
+  "n_mutants": 16383,
+  "n_skipped": 0,
+  "n_single": 21,
+  "n_multiple": 16362,
+  "source_csv": "Peri_2022_ribozyme.csv"
+}

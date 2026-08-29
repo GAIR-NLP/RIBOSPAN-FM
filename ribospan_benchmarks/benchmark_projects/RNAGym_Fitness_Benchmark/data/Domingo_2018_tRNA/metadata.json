@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Domingo_2018_tRNA",
+  "rna_type": "tRNA",
+  "wt_sequence": "GTTCCGTTGGCGTAATGGTAACGCGTCTCCCTCCTAAGGAGAAGACTGCGGGTTCGAGTCCCGTACGGAACG",
+  "wt_length": 72,
+  "n_raw": 4175,
+  "n_mutants": 4175,
+  "n_skipped": 0,
+  "n_single": 14,
+  "n_multiple": 4161,
+  "source_csv": "Domingo_2018_tRNA.csv"
+}

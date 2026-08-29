@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Kobori_2016_osa_ribozyme",
+  "rna_type": "Ribozyme",
+  "wt_sequence": "CCGCCTAACACTGCCAATGCCGGTCCCAAGCCCGGATAAAAGTGGAGGGGGCGG",
+  "wt_length": 54,
+  "n_raw": 10296,
+  "n_mutants": 10296,
+  "n_skipped": 0,
+  "n_single": 144,
+  "n_multiple": 10152,
+  "source_csv": "Kobori_2016_osa_ribozyme.csv"
+}

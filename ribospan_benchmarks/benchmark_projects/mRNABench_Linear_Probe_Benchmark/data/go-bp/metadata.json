@@ -1,0 +1,48 @@
+{
+  "dataset_id": "go-bp",
+  "n_rows": 4141,
+  "columns": [
+    "row_index",
+    "gene",
+    "chromosome",
+    "sequence",
+    "cds",
+    "splice",
+    "target",
+    "length"
+  ],
+  "task": "multilabel",
+  "target_cols": [
+    "target"
+  ],
+  "source_target_cols": [
+    "target"
+  ],
+  "target_source": "dataset_info",
+  "stacked_multilabel": false,
+  "split_type": "homology",
+  "species": "human",
+  "metric": "auprc",
+  "seeds": [
+    2541,
+    413,
+    411,
+    412,
+    2547,
+    321,
+    421,
+    311,
+    2516,
+    2515
+  ],
+  "split_ratios": [
+    0.7,
+    0.15,
+    0.15
+  ],
+  "optional": false,
+  "length_mean": 3301.8698382033326,
+  "length_max": 12142,
+  "n_split_rows": 41410,
+  "family": "GO"
+}

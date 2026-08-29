@@ -1,0 +1,12 @@
+{
+  "dataset_id": "SR43C_ARATH_Tsuboyama_2023_2N88",
+  "rna_type": "mRNA-coding",
+  "wt_sequence": "GCGGTTGCGGAATCTGTTATCGGTAAACGTGTTGGTGACGACGGTAAGACCATCGAATACCTGGTTAAATGGACCGATATGTCTGACGCGACCTGGGAGCCGCAAGACAACGTGGACTCTACCCTGGTGCTGCTGTACCAACAG",
+  "wt_length": 144,
+  "n_raw": 1663,
+  "n_mutants": 1663,
+  "n_skipped": 0,
+  "n_single": 0,
+  "n_multiple": 1663,
+  "source_csv": "SR43C_ARATH_Tsuboyama_2023_2N88.csv"
+}

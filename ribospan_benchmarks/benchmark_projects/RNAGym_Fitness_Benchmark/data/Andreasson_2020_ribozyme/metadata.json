@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Andreasson_2020_ribozyme",
+  "rna_type": "Ribozyme",
+  "wt_sequence": "ATAAAAGCGCCAGAACTACAGAAATGTAGTTGACGAGGAGGAGGTTTATCGAATTTTCGGCGGATGCCTCCAAA",
+  "wt_length": 74,
+  "n_raw": 7343,
+  "n_mutants": 7342,
+  "n_skipped": 1,
+  "n_single": 152,
+  "n_multiple": 7190,
+  "source_csv": "Andreasson_2020_ribozyme.csv"
+}

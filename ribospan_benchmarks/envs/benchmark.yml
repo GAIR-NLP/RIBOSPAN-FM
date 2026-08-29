@@ -18,6 +18,7 @@ dependencies:
       - ml-collections==1.1.0
       - pyyaml==6.0.3
       - pandas==3.0.5
+      - pyarrow==19.0.1
       - scikit-learn==1.9.0
       - matplotlib==3.11.1
       - seaborn==0.13.2

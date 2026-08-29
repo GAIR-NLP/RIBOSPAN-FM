@@ -1,0 +1,12 @@
+{
+  "dataset_id": "Guy_2014_tRNA",
+  "rna_type": "tRNA",
+  "wt_sequence": "CTCTCGGTAGCCAAGTTGGTTTAAGGCGCAAGACTTTAATTTATCACTACGAAATCTTGAGATCGGGCGTTCGACTCGCCCCCGGGAGATTTTTTCCTCGAGCAA",
+  "wt_length": 105,
+  "n_raw": 25491,
+  "n_mutants": 25491,
+  "n_skipped": 0,
+  "n_single": 213,
+  "n_multiple": 25278,
+  "source_csv": "Guy_2014_tRNA.csv"
+}
