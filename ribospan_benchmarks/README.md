@@ -1,4 +1,4 @@
-# Representation benchmarks
+# RIBOSPAN Benchmarks
 
 ```text
 ribospan_benchmarks/
@@ -29,7 +29,7 @@ Do not install packages by hand (`pip`, `conda install`, or `conda env create -f
 
 Reproduce from the project README after `./setup.sh`:
 
-- [Long-context representation](benchmark_projects/Long_Context_Representation_Benchmark/README.md) — cosine geometry, diffusion, and attention on complete mRNAs
-- [RNA-type representation](benchmark_projects/RNA_Type_Representation_Benchmark/README.md) — frozen 10-NN / t-SNE on biotypes and Rfam families
+- [Long-Context Representation Benchmark](benchmark_projects/Long_Context_Representation_Benchmark/README.md) — cosine geometry, diffusion, and attention on complete mRNAs
+- [RNA Type Representation Benchmark](benchmark_projects/RNA_Type_Representation_Benchmark/README.md) — frozen 10-NN / t-SNE on biotypes and Rfam families
 - [mRNABench Linear Probe Benchmark](benchmark_projects/mRNABench_Linear_Probe_Benchmark/README.md) — frozen last-layer mean-pool probes on HL, MRL, eCLIP, GO, VEP, and TE
 - [RNAGym Fitness Benchmark](benchmark_projects/RNAGym_Fitness_Benchmark/README.md) — frozen masked-marginal MLM scores on RNAGym DMS assays

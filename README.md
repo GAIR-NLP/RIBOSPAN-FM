@@ -16,11 +16,11 @@ Many full-length RNAs, particularly mRNAs, exceed the ~1K context lengths used t
 
 - **📏 Native 10K Pretraining**: The long-context RiboSpan models are **natively pretrained at 10,240 nt**, learning transcript-scale context during pretraining rather than relying on inference-time context extension.
 
+- **🧩 Robust High-Masking Representations**: Continued pretraining with **40% masking** substantially improves reconstruction under heavy corruption while **preserving backbone representation quality** established during 15% MLM pretraining.
+
 - **🏆 SOTA Frozen Representations**: Without task-specific heads or fine-tuning, RiboSpan-10K achieves **state-of-the-art frozen RNA representation quality** among the evaluated models, with particularly strong performance on **long RNAs**.
 
 - **🏆 Strongest RNA Encoder Foundation Model**: RiboSpan has the **strongest RNA understanding capability** among RNA encoder foundation models, covering property prediction, functional annotation, and mutation-effect scoring.
-
-- **🧩 Robust High-Masking Representations**: Continued pretraining with **40% masking** substantially improves reconstruction under heavy corruption while **preserving backbone representation quality** established during 15% MLM pretraining.
 
 ![RiboSpan architecture](docs/figures/Model_Architecture.png)
 
@@ -213,7 +213,7 @@ Together, these results show that native long-context pretraining enables dense 
 
 See [`Long_Context_Representation_Benchmark/README.md`](ribospan_benchmarks/benchmark_projects/Long_Context_Representation_Benchmark/README.md) for benchmark details.
 
-### 🗺️ SOTA Frozen RNA-Type Representations
+### 🗺️ Frozen RNA Type Representation
 
 Final-layer hidden states are mean-pooled into sequence representations and evaluated directly using **leave-one-out cosine 10-NN label recovery** and **neighborhood purity**, with **no classifier, projection head, or downstream fine-tuning**.
 
@@ -225,11 +225,17 @@ See [`RNA_Type_Representation_Benchmark/README.md`](ribospan_benchmarks/benchmar
 
 ### 🧬 Downstream Biological Benchmarks
 
-We evaluate frozen RiboSpan representations on two systematic biological benchmarks of downstream RNA tasks, covering full-transcript property prediction and zero-shot mutation-effect scoring.
+We evaluate frozen RiboSpan representations on two systematic biological benchmarks of downstream RNA tasks, covering **full-transcript property prediction** and **zero-shot fitness scoring**.
+
+Frozen last-layer mean-pooled representations are evaluated with **linear probes** on **mRNABench**, covering half-life, mean ribosome load, eCLIP binding, GO, variant effect, and translation efficiency. Separately, the pretrained MLM head is used for **zero-shot masked-marginal scoring** on **RNAGym** fitness assays, with **no probe and no fine-tuning**.
+
+On full-transcript property prediction, **RiboSpan-10K-15 is the strongest overall** among the evaluated models, and RiboSpan-10K-40 remains closely matched.
+
+On zero-shot fitness scoring, **all RiboSpan checkpoints outperform** the other evaluated foundation models. The **1K-40 checkpoint is strongest in aggregate**, showing that local substitution likelihoods benefit from short-context, high-masking MLM, whereas **native 10K pretraining is more decisive for full-transcript prediction**.
 
 ![Downstream biological benchmarks](docs/figures/Downstream_Benchmark.png)
 
-Each axis is independently scaled to the best of the six models shown.
+Each axis is independently scaled to the best of the six models shown; unnormalized scores are reported in the paper.
 
 See [`mRNABench_Linear_Probe_Benchmark/README.md`](ribospan_benchmarks/benchmark_projects/mRNABench_Linear_Probe_Benchmark/README.md) and [`RNAGym_Fitness_Benchmark/README.md`](ribospan_benchmarks/benchmark_projects/RNAGym_Fitness_Benchmark/README.md) for benchmark details.
 
