@@ -362,6 +362,36 @@ def _validate_experiment(values: Mapping[str, Any], profile: str) -> None:
     ):
         raise ConfigError("attention.heatmap_norm_quantile must be in (0, 1]")
 
+    mlm = _require_mapping(values.get("mlm"), "mlm")
+    mask_rate = mlm.get("mask_rate")
+    if (
+        not isinstance(mask_rate, (int, float))
+        or isinstance(mask_rate, bool)
+        or not 0.0 < float(mask_rate) < 1.0
+    ):
+        raise ConfigError("mlm.mask_rate must be in (0, 1)")
+
+    restricted_attention = values.get("restricted_attention")
+    if restricted_attention is not None:
+        span_sweep = _require_mapping(
+            restricted_attention, "restricted_attention"
+        ).get("span_sweep")
+        if span_sweep is not None:
+            field = "restricted_attention.span_sweep"
+            span_sweep = _require_mapping(span_sweep, field)
+            sweep_models = _require_sequence(
+                span_sweep.get("models"), f"{field}.models"
+            )
+            if len(set(sweep_models)) != len(sweep_models) or not all(
+                isinstance(item, str) and item for item in sweep_models
+            ):
+                raise ConfigError(
+                    f"{field}.models must contain unique non-empty strings"
+                )
+            _unique_numeric(
+                span_sweep.get("spans"), f"{field}.spans", integral=True, minimum=1
+            )
+
     cosine = _require_mapping(values.get("cosine"), "cosine")
     context = _require_mapping(cosine.get("context"), "cosine.context")
     trajectory = context.get("trajectory")

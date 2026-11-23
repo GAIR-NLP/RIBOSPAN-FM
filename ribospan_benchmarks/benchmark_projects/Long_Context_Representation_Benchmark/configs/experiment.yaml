@@ -91,6 +91,16 @@ attention:
   batch_size: 1
   dtype: bfloat16
 
+mlm:
+  mask_rate: 0.15
+
+restricted_attention:
+  # These models are scored again with attention held to each span shorter
+  # than their own pretraining span.
+  span_sweep:
+    models: [RIBOSPAN-10K-15, RIBOSPAN-10K-40]
+    spans: [511, 1023, 2047, 4095, 8191]
+
 profiles:
   publication: {}
   pilot:

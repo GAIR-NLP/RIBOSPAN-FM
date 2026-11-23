@@ -26,7 +26,7 @@ SUPPORTED_DTYPES: dict[str, torch.dtype] = {
 }
 
 
-SUPPORTED_BACKENDS = ("rnabert", "ribospan", "hydrarna")
+SUPPORTED_BACKENDS = ("rnabert", "ribospan", "hydrarna", "rnaverse", "ribogram")
 HF_DIR_BACKENDS = ("rnabert", "ribospan")
 YARN_BACKENDS = ("rnabert", "ribospan")
 
@@ -645,6 +645,24 @@ def load_encoder(
         from .hydrarna_io import load_hydrarna
 
         return load_hydrarna(
+            spec,
+            device=device,
+            dtype=dtype,
+            requested_max_length=requested_max_length,
+        )
+    if backend == "rnaverse":
+        from .rnaverse_io import load_rnaverse_encoder
+
+        return load_rnaverse_encoder(
+            spec,
+            device=device,
+            dtype=dtype,
+            requested_max_length=requested_max_length,
+        )
+    if backend == "ribogram":
+        from .ribogram_io import load_ribogram_encoder
+
+        return load_ribogram_encoder(
             spec,
             device=device,
             dtype=dtype,

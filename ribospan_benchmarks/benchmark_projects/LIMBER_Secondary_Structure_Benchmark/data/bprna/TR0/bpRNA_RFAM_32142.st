@@ -1,0 +1,2 @@
+AGGUGAUGUCUCCUGACCUGUAUCAAUGGAGGCACUCGGCUCUGCUGUGGGCAGCUGAAGUUGCUGCCUUAGAUGCUGGUCGUCGCUGGCGGGGCGUGAGGAUGGGUUAAAUGCCCA
+.[[[..(((((((..]]].........)))))))((((((((((((...((((((........))))))..((((.....))))...)))))))).))))..(((((.....)))))

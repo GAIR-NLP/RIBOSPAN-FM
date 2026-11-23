@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "description": "Real labelled records used by test.ipynb; copied from the original RiboGRAM evaluation datasets.",
+  "reference_code_root": "D:\\44444444444444444\\code\\STAR",
+  "provenance_note": "Source paths are recorded for audit only; inference uses the copied sequences in this file.",
+  "classification": {
+    "ncRNA13": {
+      "id": "JNOY01098855.1/3507-3580",
+      "sequence": "GUUUCUGUAGUGUAGUGGUUAUCAUAUUUGCCUCACAUGCAUAAGAUCCCUGGUUUGUAACUGGGCAGACAACA",
+      "expected_label": "tRNA",
+      "expected_label_id": 4,
+      "split": "test",
+      "source_dataset": "ncRNA_dataset.csv",
+      "source_path_original": "/share/project/wanghui/0000/downstream_datasets/ncRNA_classifi/ncRNA_dataset.csv",
+      "reference_script": "20251010_function_ncRNA_RibonTrans_probing_layer12.py",
+      "selection": "first tRNA record in the official test split"
+    },
+    "ncRNA88": {
+      "id": "RF00005",
+      "sequence": "UGGUGGUUCAGUGGUAGAAUUCUCACCUUUCAGGUGGAAGACCCAGGUUCAAUUCCCGGCCA",
+      "expected_label": "RF00005",
+      "expected_label_id": 4,
+      "split": "Test",
+      "source_dataset": "ncRNA_88category.txt",
+      "source_path_original": "/share/project/wanghui/0000/downstream_datasets/ncRNA_classifi/ncRNA_88category.txt",
+      "reference_script": "20250929_function_ncRNA88_RibonTrans_probing.py",
+      "selection": "first RF00005 record in the official Test split"
+    }
+  },
+  "interaction": {
+    "rpi": {
+      "id": "chr15_96282877_96282978_-_AARS_K562",
+      "rna": "CCAGCACAGUGUCAUGGGACAGUGGGCCCUGGUGCCACAAUGCCCGGCAUCUCCACCAGAUACAGCUUUGAGAUCUUCAUGAUGAAGCUUGCUCCAAUCCA",
+      "partner": "MDSTLTASEIRQRFIDFFKRNEHTYVHSSATIPLDDPTLLFANAGMNQFKPIFLNTIDPSHPMAKLSRAANTQKCIRAGGKHNDLDDVGKDVYHHTFFEMLGSWSFGDYFKELACKMALELLTQEFGIPIERLYVTYFGGDEAAGLEADLECKQIWQNLGLDDTKILPGNMKDNFWEMGDTGPCGPCSEIHYDRIGGRDAAHLVNQDDPNVLEIWNLVFIQYNREADGILKPLPKKSIDTGMGLERLVSVLQNKMSNYDTDLFVPYFEAIQKGTGARPYTGKVGAEDADGIDMAYRVLADHARTITVALADGGRPDNTGRGYVLRRILRRAVRYAHEKLNASRGFFATLVDVVVQSLGDAFPELKKDPDMVKDIINEEEVQFLKTLSRGRRILDRKIQSLGDSKTIPGDTAWLLYDTYGFPVDLTGLIAEEKGLVVDMDGFEEERKLAQLKSQGKGAGGEDLIMLDIYAIEELRARGLEVTDDSPKYNYHLDSSGSYVFE",
+      "partner_name": "AARS",
+      "expected_label": 1,
+      "split": "test",
+      "source_dataset": "AARS_K562.csv and rbp2bed_seq_20260807_138.txt",
+      "source_path_original": "/share/project/wanghui/STAR/20251222/20260106_RBP/20260807/k563_10w/K562/AARS_K562.csv",
+      "protein_source_path_original": "/share/project/wanghui/STAR/20251222/20260106_RBP/20260807/rbp2bed_seq_20260807_138.txt",
+      "reference_script": "202501207_DDP_STAR_pretraining_add_CNN_beforeAddBias_long_short_Protein_20260107_withBCEloss_ultra_top10w_add_before.py",
+      "selection": "first positive AARS record in the official K562 test split; first 500 protein residues as used by the loader"
+    },
+    "rri": {
+      "id": "r1=chrX:12977034-12977082(+)_r2=chrM:9015-9075(+)",
+      "rna": "GGTGAAGGAAGAAGTGGGGTGGAAGAAGTGGGGTGGGACGACAGTGAAA",
+      "partner": "CATTACTGCAGGCCACCTACTCATGCACCTAATTGGAAGCGCCACCCTAGCAATATCAACC",
+      "rna1_id": "r1=chrX:12977034-12977082(+)",
+      "rna2_id": "r2=chrM:9015-9075(+)",
+      "interaction_type": "protein_coding-protein_coding",
+      "expected_label": 1,
+      "split": "80%-identity held-out test",
+      "source_dataset": "20260127_type15_seq_low_500_test_data_positive_negative80.csv",
+      "source_path_original": "/share/project/wanghui/STAR/20251222/RNA_data/20260127_type15_seq_low_500_test_data_positive_negative80.csv",
+      "reference_script": "202501207_DDP_STAR_pretraining_add_CNN_beforeAddBias_long_short_RNA_20260129RASP_withBCEloss_15type_new.py",
+      "selection": "labelled positive record from the official 80%-identity test set"
+    },
+    "rci": {
+      "id": "chr22_48496015_48496081_+__chr22_48495959_48496059",
+      "rna": "GCUCCUAUCGCCCGUGAAGGCCCGGCUUACUCCCUAAAUGCAGUGGAUGCAGGAAGGCAUGGUGAGC",
+      "partner": "GCTGCTTGTGCTCATTCCTCTCCCACATACTCCGGATTGGACATAGGTGCTGTGGTGCTCCTATCGCCCGTGAAGGCCCGGCTTACTCCCTAAATGCAGTG",
+      "rna_id": "chr22_48496015_48496081_+",
+      "dna_id": "chr22_48495959_48496059",
+      "score": 1.05,
+      "expected_label": 1,
+      "split": "validation",
+      "source_dataset": "20260119_HEK293T_RNA_DNA_sample500w_validation_set.csv",
+      "source_path_original": "/share/project/wanghui/STAR/20251222/20260119_DNA/20260119_HEK293T_RNA_DNA_sample500w_validation_set.csv",
+      "reference_script": "202501207_DDP_STAR_pretraining_add_CNN_beforeAddBias_long_short_DNA_20260120_withBCEloss_HEK293T.py",
+      "selection": "first labelled positive record in the official HEK293T validation set"
+    }
+  }
+}

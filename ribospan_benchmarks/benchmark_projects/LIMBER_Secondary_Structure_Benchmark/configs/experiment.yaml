@@ -1,0 +1,38 @@
+schema_version: 1
+models_registry: configs/models.yaml
+output_root: outputs/limber_ss
+
+# RiNALMo secondary-structure fine-tuning, as run by LIMBER.
+# Sequences longer than max_len are dropped, not truncated.
+protocol:
+  name: rinalmo_ss
+  head: residual_conv_pairwise
+  loss: bce_upper_triangle
+  decode: canonical_greedy
+  metric: flexible_f1
+
+# Models drawn in the summary figure, in this order. The tables hold every model.
+figure:
+  models: [LIMBER-macro, RIBOSPAN-10K-15, RIBOSPAN-10K-40]
+
+max_len: 512
+epochs: 26
+base_lr: 0.0005
+unfreeze_block: 3
+unfreeze_every: 3
+unfreeze_min_layer: 0
+tune_every: 5
+lr_decay_steps: 7000
+seed: 42
+
+tasks:
+  bprna_ts0:
+    train: data/bprna/TR0
+    valid: data/bprna/VL0
+    test: data/bprna/TS0
+  rivas_testsetb:
+    train: data/rivas/TrainSetA
+    test: data/rivas/TestSetB
+    val_frac: 0.10
+  archiveII_lfo:
+    root: data/archiveII_famfold

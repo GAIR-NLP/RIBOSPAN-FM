@@ -20,7 +20,7 @@ Many full-length RNAs, particularly mRNAs, exceed the ~1K context lengths used t
 
 - **🏆 SOTA Frozen Representations**: Without task-specific heads or fine-tuning, RiboSpan-10K achieves **state-of-the-art frozen RNA representation quality** among the evaluated models, with particularly strong performance on **long RNAs**.
 
-- **🏆 Strongest RNA Encoder Foundation Model**: RiboSpan has the **strongest RNA understanding capability** among RNA encoder foundation models, covering property prediction, functional annotation, and mutation-effect scoring.
+- **🏆 Strongest RNA Encoder Foundation Model**: RiboSpan has the **strongest RNA understanding capability** among RNA encoder foundation models, covering property prediction, functional annotation, and mutation-effect scoring, and is **competitive** with dedicated non-coding RNA models on **secondary structure prediction**.
 
 ![RiboSpan architecture](docs/figures/Model_Architecture.png)
 
@@ -203,13 +203,15 @@ Native 10K RiboSpan models maintain **strong nucleotide reconstruction at 10,240
 
 ### 🔭 Long-Context Representation
 
-We introduce a **controlled long-context representation benchmark** using complete mRNAs spanning **1,024 to 10,240 nt**. A short central interval is rearranged while preserving its nucleotide composition, allowing **contextual responsiveness**, **region-specific differentiation**, and the **propagation of representation changes** to be evaluated jointly.
+We introduce a **controlled long-context representation benchmark** using complete mRNAs spanning **1,024 to 10,240 nt**. A short central interval is rearranged while preserving its nucleotide composition, allowing **contextual responsiveness**, **region-specific differentiation**, and the **propagation of representation changes** to be evaluated jointly. These representation measures are complemented by **masked-nucleotide accuracy** on the same transcripts and by an **attention-restriction ablation**.
 
-Native 10K RiboSpan exhibits a distinct long-context representation profile. Compared with short-context dense encoders extrapolated beyond their pretrained range, it preserves **substantially stronger contextual organization at transcript-scale lengths**. Compared with long-sequence models based on hybrid sequence-mixing architectures, it shows **stronger context-dependent differentiation** while maintaining **highly controlled distal propagation**.
+Beyond their pretrained range, short-context encoders under direct extrapolation **lose their contextual organization**; inference-time YaRN scaling restores much of it, but with **broader distal propagation**. Native 10K RiboSpan shows no such failure and is the only setting that combines **strong context-dependent differentiation**, **localized responses to perturbation**, and the **highest masked-nucleotide accuracy**.
 
-Together, these results show that native long-context pretraining enables dense bidirectional attention to combine **interaction flexibility with long-range calibration**, supporting **strong context-dependent reorganization** while suppressing broad, non-selective propagation across the transcript.
+Restricting every attention layer to the model's pretrained context length restores the representation organization of the short-context models, which traces their failure to **attention beyond the pretrained range**. Their accuracy nevertheless remains significantly below that of native 10K RiboSpan, and narrowing the attention span of the 10K models lowers their own accuracy. Native long-context pretraining therefore provides what neither positional extension nor attention restriction recovers: **attention over transcript-scale distances that is usable for prediction**.
 
 ![Long-context representation](docs/figures/Long_Context_Benchmark.png)
+
+Bars show the values under attention restriction; hatched segments and open frames mark the increase or decrease relative to unrestricted attention.
 
 See [`Long_Context_Representation_Benchmark/README.md`](ribospan_benchmarks/benchmark_projects/Long_Context_Representation_Benchmark/README.md) for benchmark details.
 
@@ -225,23 +227,29 @@ See [`RNA_Type_Representation_Benchmark/README.md`](ribospan_benchmarks/benchmar
 
 ### 🧬 Downstream Biological Benchmarks
 
-We evaluate frozen RiboSpan representations on two systematic biological benchmarks of downstream RNA tasks, covering **full-transcript property prediction** and **zero-shot fitness scoring**.
+We evaluate RiboSpan on downstream RNA tasks covering **full-transcript property prediction**, **zero-shot fitness scoring**, and **secondary structure prediction**.
 
 Frozen last-layer mean-pooled representations are evaluated with **linear probes** on **mRNABench**, covering half-life, mean ribosome load, eCLIP binding, GO, variant effect, and translation efficiency. Separately, the pretrained MLM head is used for **zero-shot masked-marginal scoring** on **RNAGym** fitness assays, with **no probe and no fine-tuning**.
 
 On full-transcript property prediction, **RiboSpan-10K-15 is the strongest overall** among the evaluated models, and RiboSpan-10K-40 remains closely matched.
 
-On zero-shot fitness scoring, **all RiboSpan checkpoints outperform** the other evaluated foundation models. The **1K-40 checkpoint is strongest in aggregate**, showing that local substitution likelihoods benefit from short-context, high-masking MLM, whereas **native 10K pretraining is more decisive for full-transcript prediction**.
+On zero-shot fitness scoring, **all RiboSpan checkpoints outperform** the other evaluated foundation models in the category-balanced aggregate score. The **1K-40 checkpoint is strongest overall**, showing that local substitution likelihoods benefit from short-context, high-masking MLM, whereas **native 10K pretraining is more decisive for full-transcript prediction**.
 
 ![Downstream biological benchmarks](docs/figures/Downstream_Benchmark.png)
 
-Each axis is independently scaled to the best of the six models shown; unnormalized scores are reported in the paper.
+Each axis is independently scaled to the best of the nine models shown; unnormalized scores are reported in the paper.
 
-See [`mRNABench_Linear_Probe_Benchmark/README.md`](ribospan_benchmarks/benchmark_projects/mRNABench_Linear_Probe_Benchmark/README.md) and [`RNAGym_Fitness_Benchmark/README.md`](ribospan_benchmarks/benchmark_projects/RNAGym_Fitness_Benchmark/README.md) for benchmark details.
+On secondary structure prediction, RiboSpan-10K is evaluated under two published protocols. With its **backbone frozen** and only a prediction head trained, it **outperforms the fully fine-tuned, structure-guided structRFM** on ArchiveII and bpRNA TS0. Under the LIMBER fine-tuning protocol, it **matches LIMBER-macro** on the leave-one-family-out ArchiveII evaluation and remains competitive on bpRNA TS0 and Rivas TestSetB. RiboSpan uses **no structural supervision during pretraining**.
+
+![Secondary structure prediction](docs/figures/Secondary_Structure_Benchmark.png)
+
+Violins show the test sets scored as a whole and boxes show ArchiveII by RNA family; lines and dots mark medians and means, and the number above each violin is the mean in (a) and the median in (b).
+
+See [`mRNABench_Linear_Probe_Benchmark/README.md`](ribospan_benchmarks/benchmark_projects/mRNABench_Linear_Probe_Benchmark/README.md), [`RNAGym_Fitness_Benchmark/README.md`](ribospan_benchmarks/benchmark_projects/RNAGym_Fitness_Benchmark/README.md), [`StructRFM_Secondary_Structure_Benchmark/README.md`](ribospan_benchmarks/benchmark_projects/StructRFM_Secondary_Structure_Benchmark/README.md), and [`LIMBER_Secondary_Structure_Benchmark/README.md`](ribospan_benchmarks/benchmark_projects/LIMBER_Secondary_Structure_Benchmark/README.md) for benchmark details.
 
 ### 🔁 Reproducing the Benchmarks
 
-For end-to-end reproduction of the **Long-Context Representation**, **RNA-Type Representation**, **mRNABench**, and **RNAGym** evaluations, including environment setup, required checkpoints, and evaluation scripts, see [`ribospan_benchmarks/README.md`](ribospan_benchmarks/README.md).
+For end-to-end reproduction of the **Long-Context Representation**, **RNA-Type Representation**, **mRNABench**, **RNAGym**, and **Secondary Structure** evaluations, including environment setup, required checkpoints, and evaluation scripts, see [`ribospan_benchmarks/README.md`](ribospan_benchmarks/README.md).
 
 ## 📄 License
 

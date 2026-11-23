@@ -1,0 +1,2 @@
+UUAAACAAACCUUCUUAAAAUUUCUGAGAUUUGUUUAUUUUGCAUAUUCAGUAAAU
+.((((((((((.........[[[[[[[)))))))))).........].]]].]]].

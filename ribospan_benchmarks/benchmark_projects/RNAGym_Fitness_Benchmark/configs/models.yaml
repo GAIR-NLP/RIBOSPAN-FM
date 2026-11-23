@@ -21,6 +21,16 @@ models:
     context_window: 10240
     backend: hydrarna
 
+  - name: RiboGRAM
+    source_path: RiboGRAM
+    context_window: 1024
+    backend: ribogram
+
+  - name: RNAverse
+    source_path: RNAverse
+    context_window: 1024
+    backend: rnaverse
+
   - name: RIBOSPAN-1K-15
     source_path: RIBOSPAN-1K-15
     context_window: 1024
@@ -40,3 +50,8 @@ models:
     source_path: RIBOSPAN-10K-40
     context_window: 10240
     backend: ribospan
+
+  - name: LIMBER-macro
+    source_path: LIMBER-macro
+    context_window: 1024
+    backend: limber

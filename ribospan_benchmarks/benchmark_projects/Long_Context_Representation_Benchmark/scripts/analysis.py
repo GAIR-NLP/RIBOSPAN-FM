@@ -2,7 +2,7 @@
 # Copyright (c) 2026 RIBOSPAN Team Authors.
 # SPDX-License-Identifier: Apache-2.0
 
-"""Analyze long-context representation endpoints and attention diagnostics."""
+"""Analyze long-context endpoints, masked accuracy, and attention diagnostics."""
 
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ import pandas as pd
 from .config import load_experiment_config, public_path
 from .plotting.attention import plot_attention_diagnostics
 from .plotting.cosine import plot_cosine_diagnostics
+from .plotting.restricted_attention import plot_restricted_attention
 from .plotting.model_style import display_model_name, ordered_models
 
 
@@ -30,7 +31,12 @@ PRIMARY_BH_ENDPOINTS = (
     "final_relative_distal_075",
 )
 ATTENTION_BH_ENDPOINTS = ("late_layer_attention_convergence",)
-BH_ENDPOINTS = set(PRIMARY_BH_ENDPOINTS) | set(ATTENTION_BH_ENDPOINTS)
+MASKED_ACCURACY_ENDPOINT = "masked_nucleotide_accuracy"
+BH_ENDPOINTS = (
+    set(PRIMARY_BH_ENDPOINTS)
+    | set(ATTENTION_BH_ENDPOINTS)
+    | {MASKED_ACCURACY_ENDPOINT}
+)
 SENSITIVITY_PAIRED_ENDPOINTS = (
     "final_relative_distal_025",
     "final_relative_distal_050",
@@ -59,6 +65,51 @@ PAIRED_ENDPOINT_LABELS = {
     "final_relative_distal_050": "relative-distal r≥0.50",
     "final_far_field_diffusion": "far-field ≥1024 nt",
     "late_layer_attention_convergence": "late-layer attention distance",
+    MASKED_ACCURACY_ENDPOINT: "accuracy",
+}
+MLM_ACCURACY_COLUMN = "mlm_accuracy"
+# Endpoint name and pair-level column of each model-pair test under restriction.
+RESTRICTED_PAIRED_METRICS = (
+    ("final_context_gain", "delta_context_separation_structured_vs_native"),
+    (
+        "final_cross_region_same_base_cosine",
+        "cross_context_same_base_cos_structured",
+    ),
+    ("final_relative_distal_075", "relative_distal_075"),
+    (MASKED_ACCURACY_ENDPOINT, MLM_ACCURACY_COLUMN),
+)
+RESTRICTED_METRIC_COLUMNS = (
+    *PAPER_METRIC_COLUMNS,
+    (MLM_ACCURACY_COLUMN, MLM_ACCURACY_COLUMN),
+)
+PAIR_KEYS = ["model", "length", "pair_group_id"]
+ATTENTION_SPAN_COLUMN = "attention_span"
+SPAN_SWEEP_FILE = "attention_span_sweep_units.csv"
+SPAN_SWEEP_HEADERS = {
+    "mlm_accuracy": "accuracy",
+    "mlm_accuracy_difference": "accuracy_difference",
+    "mlm_accuracy_difference_ci_low": "accuracy_difference_ci_low",
+    "mlm_accuracy_difference_ci_high": "accuracy_difference_ci_high",
+    "mlm_accuracy_cohen_dz": "accuracy_cohen_dz",
+    "mlm_accuracy_q_value_bh": "accuracy_q_value_bh",
+    "delta_cs": "ΔCS",
+    "c_cross": "C_cross",
+    "d_distal": "D_distal",
+}
+MLM_ACCURACY_HEADERS = {
+    "mlm_accuracy": "accuracy",
+    "mlm_accuracy_ci_low": "accuracy_ci_low",
+    "mlm_accuracy_ci_high": "accuracy_ci_high",
+}
+RESTRICTED_HEADERS = {
+    f"{name}_{suffix}": f"{label}_{suffix}"
+    for name, label in (
+        ("delta_cs", "ΔCS"),
+        ("c_cross", "C_cross"),
+        ("d_distal", "D_distal"),
+        ("mlm_accuracy", "accuracy"),
+    )
+    for suffix in ("unrestricted", "restricted", "difference", "q_value_bh")
 }
 LENGTH_PRIMARY_HEADERS = {
     "delta_cs": "ΔCS",
@@ -103,6 +154,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--profile", default=None)
     parser.add_argument("--cosine-dir", default=None)
     parser.add_argument("--attention-dir", default=None)
+    parser.add_argument("--mlm-dir", default=None)
+    parser.add_argument("--restricted-attention-dir", default=None)
     parser.add_argument("--output", default=None)
     parser.add_argument("--bootstrap-replicates", type=int, default=2000)
     parser.add_argument("--bootstrap-seed", type=int, default=20260709)
@@ -344,6 +397,257 @@ def _length_primary_scores(
                 row[f"{out_name}_ci_high"] = stats[2]
             rows.append(row)
     return pd.DataFrame(rows)
+
+
+def _mlm_accuracy_scores(
+    mlm_units: pd.DataFrame,
+    replicates: int,
+    seed: int,
+) -> pd.DataFrame:
+    """Bootstrap masked-nucleotide accuracy at the native-transcript grain."""
+
+    if mlm_units.empty or {*PAIR_KEYS, MLM_ACCURACY_COLUMN} - set(mlm_units):
+        return pd.DataFrame()
+    units = _numeric(mlm_units, ("length", MLM_ACCURACY_COLUMN))
+    rows: list[dict[str, Any]] = []
+    models = ordered_models(units["model"])
+    lengths = sorted(int(value) for value in units["length"].dropna().unique())
+    for length_index, length in enumerate(lengths):
+        for model_index, model in enumerate(models):
+            subset = units[(units["model"] == model) & (units["length"] == length)]
+            if subset.empty:
+                continue
+            rng = np.random.default_rng(
+                seed + 7919 * length_index + 1009 * model_index
+            )
+            estimate, low, high, count = _bootstrap_mean(
+                subset[MLM_ACCURACY_COLUMN].to_numpy(dtype=float), replicates, rng
+            )
+            rows.append(
+                {
+                    "model": model,
+                    "length": length,
+                    "n_pairs": count,
+                    "mlm_accuracy": estimate,
+                    "mlm_accuracy_ci_low": low,
+                    "mlm_accuracy_ci_high": high,
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def _unrestricted_units(
+    pair_metrics: pd.DataFrame,
+    mlm_units: pd.DataFrame,
+) -> pd.DataFrame:
+    """Pair-level cosine endpoints joined with the pair's masked accuracy."""
+
+    if pair_metrics.empty:
+        return pd.DataFrame()
+    units = _numeric(pair_metrics, ("length",))
+    if mlm_units.empty or {*PAIR_KEYS, MLM_ACCURACY_COLUMN} - set(mlm_units):
+        return units
+    accuracy = _numeric(
+        mlm_units[[*PAIR_KEYS, MLM_ACCURACY_COLUMN]], ("length", MLM_ACCURACY_COLUMN)
+    )
+    accuracy = accuracy.groupby(PAIR_KEYS, as_index=False)[MLM_ACCURACY_COLUMN].mean()
+    return units.merge(accuracy, on=PAIR_KEYS, how="left")
+
+
+def _restricted_units(restricted: pd.DataFrame) -> pd.DataFrame:
+    """Pair-level endpoints of the restricted_attention stage."""
+
+    columns = [column for _, column in RESTRICTED_METRIC_COLUMNS]
+    if restricted.empty or {*PAIR_KEYS, *columns} - set(restricted):
+        return pd.DataFrame()
+    return _numeric(restricted[[*PAIR_KEYS, *columns]], ("length", *columns))
+
+
+def _cohen_dz(differences: Sequence[float]) -> float:
+    """Mean paired difference over its standard deviation."""
+
+    array = np.asarray(differences, dtype=float)
+    array = array[np.isfinite(array)]
+    if len(array) < 2:
+        return math.nan
+    deviation = float(np.std(array, ddof=1))
+    return float(array.mean()) / deviation if deviation > 0 else math.nan
+
+
+def _paired_change(
+    out_name: str,
+    differences: Sequence[float],
+    replicates: int,
+    rng: np.random.Generator,
+) -> dict[str, Any]:
+    """The columns of one within-model paired change of endpoint ``out_name``.
+
+    ``_tested`` is False when every difference is zero, which tests nothing.
+    """
+
+    array = np.asarray(differences, dtype=float)
+    difference, low, high, p_value, _ = _paired_bootstrap(array, replicates, rng)
+    return {
+        f"{out_name}_difference": difference,
+        f"{out_name}_difference_ci_low": low,
+        f"{out_name}_difference_ci_high": high,
+        f"{out_name}_cohen_dz": _cohen_dz(array),
+        f"{out_name}_p_value": p_value,
+        f"{out_name}_q_value_bh": math.nan,
+        f"_{out_name}_tested": bool(np.any(array[np.isfinite(array)] != 0)),
+    }
+
+
+def _assign_endpoint_q_values(frame: pd.DataFrame) -> pd.DataFrame:
+    """BH-adjust each endpoint's p-values across the rows of one table.
+
+    A comparison whose paired differences are all zero keeps its p-value,
+    gets no q-value, and does not count toward the family.
+    """
+
+    result = frame.copy()
+    for out_name, _ in RESTRICTED_METRIC_COLUMNS:
+        p_column = f"{out_name}_p_value"
+        tested_column = f"_{out_name}_tested"
+        if p_column not in result or tested_column not in result:
+            continue
+        p_values = result[p_column].to_numpy(dtype=float).copy()
+        p_values[~result[tested_column].eq(True).to_numpy()] = np.nan
+        result[f"{out_name}_q_value_bh"] = _bh_fdr(p_values)
+        result = result.drop(columns=tested_column)
+    return result
+
+
+def _restricted_attention_scores(
+    unrestricted: pd.DataFrame,
+    restricted: pd.DataFrame,
+    replicates: int,
+    seed: int,
+) -> pd.DataFrame:
+    """Paired restricted-minus-unrestricted change of every endpoint."""
+
+    if unrestricted.empty or restricted.empty:
+        return pd.DataFrame()
+    merged = restricted.merge(
+        unrestricted,
+        on=PAIR_KEYS,
+        how="inner",
+        suffixes=("_restricted", "_unrestricted"),
+    )
+    rows: list[dict[str, Any]] = []
+    models = ordered_models(merged["model"])
+    lengths = sorted(int(value) for value in merged["length"].dropna().unique())
+    for length_index, length in enumerate(lengths):
+        for model_index, model in enumerate(models):
+            subset = merged[(merged["model"] == model) & (merged["length"] == length)]
+            if subset.empty:
+                continue
+            rng = np.random.default_rng(
+                seed + 7919 * length_index + 1009 * model_index
+            )
+            row: dict[str, Any] = {
+                "model": model,
+                "length": length,
+                "n_pairs": int(subset["pair_group_id"].nunique()),
+            }
+            for out_name, column in RESTRICTED_METRIC_COLUMNS:
+                before = f"{column}_unrestricted"
+                after = f"{column}_restricted"
+                if before not in subset or after not in subset:
+                    continue
+                change = _paired_change(
+                    out_name,
+                    (subset[after] - subset[before]).to_numpy(dtype=float),
+                    replicates,
+                    rng,
+                )
+                row[f"{out_name}_unrestricted"] = float(subset[before].mean())
+                row[f"{out_name}_restricted"] = float(subset[after].mean())
+                row.update(change)
+            rows.append(row)
+    return _assign_endpoint_q_values(pd.DataFrame(rows))
+
+
+def _span_units(frame: pd.DataFrame) -> pd.DataFrame:
+    """Pair-level rows of the restricted_attention stage, with their span."""
+
+    columns = [column for _, column in RESTRICTED_METRIC_COLUMNS]
+    if frame.empty or {*PAIR_KEYS, ATTENTION_SPAN_COLUMN, *columns} - set(frame):
+        return pd.DataFrame()
+    return _numeric(
+        frame[[*PAIR_KEYS, ATTENTION_SPAN_COLUMN, *columns]],
+        ("length", ATTENTION_SPAN_COLUMN, *columns),
+    )
+
+
+def _attention_span_sweep_scores(
+    sweep: pd.DataFrame,
+    own: pd.DataFrame,
+    replicates: int,
+    seed: int,
+) -> pd.DataFrame:
+    """Every endpoint at each swept span, and its paired change from the own span.
+
+    ``own`` holds each model at its own pretraining span. A model's rows end
+    with that span, which has no difference columns.
+    """
+
+    if sweep.empty or own.empty:
+        return pd.DataFrame()
+    rows: list[dict[str, Any]] = []
+    models = ordered_models(sweep["model"])
+    lengths = sorted(int(value) for value in sweep["length"].dropna().unique())
+    for length_index, length in enumerate(lengths):
+        for model_index, model in enumerate(models):
+            reference = own[(own["model"] == model) & (own["length"] == length)]
+            swept = sweep[(sweep["model"] == model) & (sweep["length"] == length)]
+            if reference.empty or swept.empty:
+                continue
+            spans = sorted(
+                int(value) for value in swept[ATTENTION_SPAN_COLUMN].dropna().unique()
+            )
+            own_span = int(reference[ATTENTION_SPAN_COLUMN].max())
+            for span_index, span in enumerate([*spans, own_span]):
+                is_own = span_index == len(spans)
+                subset = (
+                    reference
+                    if is_own
+                    else swept[swept[ATTENTION_SPAN_COLUMN] == span]
+                )
+                rng = np.random.default_rng(
+                    seed
+                    + 7919 * length_index
+                    + 1009 * model_index
+                    + 104729 * (span_index + 1)
+                )
+                row: dict[str, Any] = {
+                    "model": model,
+                    "length": length,
+                    ATTENTION_SPAN_COLUMN: span,
+                    "n_pairs": int(subset["pair_group_id"].nunique()),
+                }
+                paired = subset.merge(reference, on=PAIR_KEYS, suffixes=("", "_own"))
+                for out_name, column in RESTRICTED_METRIC_COLUMNS:
+                    estimate, low, high, _ = _bootstrap_mean(
+                        subset[column].to_numpy(dtype=float), replicates, rng
+                    )
+                    row[out_name] = estimate
+                    row[f"{out_name}_ci_low"] = low
+                    row[f"{out_name}_ci_high"] = high
+                    if is_own:
+                        continue
+                    row.update(
+                        _paired_change(
+                            out_name,
+                            (paired[column] - paired[f"{column}_own"]).to_numpy(
+                                dtype=float
+                            ),
+                            replicates,
+                            rng,
+                        )
+                    )
+                rows.append(row)
+    return _assign_endpoint_q_values(pd.DataFrame(rows))
 
 
 def _paired_tests_for_report(
@@ -1139,6 +1443,7 @@ def _model_pairwise_tests(
     attention_convergence: pd.DataFrame,
     replicates: int,
     seed: int,
+    masked_accuracy: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Compare every model pair on exactly paired full-transcript windows."""
     endpoint_frames: list[tuple[str, pd.DataFrame, str]] = []
@@ -1197,9 +1502,52 @@ def _model_pairwise_tests(
                 "normalized_mean_distance_late_minus_middle",
             )
         )
+    # Appended last, so the draws of the endpoints above stay as they were.
+    if masked_accuracy is not None and not masked_accuracy.empty:
+        endpoint_frames.append(
+            (MASKED_ACCURACY_ENDPOINT, masked_accuracy, MLM_ACCURACY_COLUMN)
+        )
+
+    rng = np.random.default_rng(seed + 104729)
+    result = pd.DataFrame(_pairwise_rows(endpoint_frames, replicates, rng))
+    if not result.empty:
+        result = _assign_grouped_q_values(result)
+    return result
+
+
+def _restricted_model_pairwise_tests(
+    restricted: pd.DataFrame,
+    replicates: int,
+    seed: int,
+) -> pd.DataFrame:
+    """Compare every model pair with each model's attention held to its own span."""
+
+    if restricted.empty:
+        return pd.DataFrame()
+    rng = np.random.default_rng(seed + 1299709)
+    result = pd.DataFrame(
+        _pairwise_rows(
+            [
+                (endpoint, restricted, metric)
+                for endpoint, metric in RESTRICTED_PAIRED_METRICS
+            ],
+            replicates,
+            rng,
+        )
+    )
+    if not result.empty:
+        result = _assign_grouped_q_values(result)
+    return result
+
+
+def _pairwise_rows(
+    endpoint_frames: Sequence[tuple[str, pd.DataFrame, str]],
+    replicates: int,
+    rng: np.random.Generator,
+) -> list[dict[str, Any]]:
+    """Paired model-minus-model rows for every endpoint, length, and model pair."""
 
     rows: list[dict[str, Any]] = []
-    rng = np.random.default_rng(seed + 104729)
     for endpoint, frame, metric in endpoint_frames:
         required = {"model", "length", "pair_group_id", metric}
         if frame.empty or not required.issubset(frame):
@@ -1256,10 +1604,7 @@ def _model_pairwise_tests(
                         ),
                     }
                 )
-    result = pd.DataFrame(rows)
-    if not result.empty:
-        result = _assign_grouped_q_values(result)
-    return result
+    return rows
 
 
 def _markdown_table(
@@ -1305,7 +1650,62 @@ def _write_report(
     attention_convergence: pd.DataFrame,
     cosine_plot_count: int,
     attention_plot_count: int,
+    mlm_scores: pd.DataFrame,
+    restricted_scores: pd.DataFrame,
+    mask_rate: float,
+    span_sweep_scores: pd.DataFrame,
+    restricted_paired_tests: pd.DataFrame,
 ) -> None:
+    mlm_table = _markdown_table(
+        mlm_scores,
+        (
+            "model",
+            "length",
+            "n_pairs",
+            "mlm_accuracy",
+            "mlm_accuracy_ci_low",
+            "mlm_accuracy_ci_high",
+        ),
+        digits=4,
+        headers=MLM_ACCURACY_HEADERS,
+    )
+    restricted_longest = (
+        restricted_scores[
+            restricted_scores["length"] == restricted_scores["length"].max()
+        ]
+        if "length" in restricted_scores
+        else pd.DataFrame()
+    )
+    restricted_table = _markdown_table(
+        restricted_longest,
+        ("model", "length", "n_pairs", *RESTRICTED_HEADERS),
+        digits=4,
+        headers=RESTRICTED_HEADERS,
+    )
+    span_sweep_section = ""
+    if not span_sweep_scores.empty:
+        span_sweep_table = _markdown_table(
+            span_sweep_scores[
+                span_sweep_scores["length"] == span_sweep_scores["length"].max()
+            ],
+            ("model", ATTENTION_SPAN_COLUMN, "n_pairs", *SPAN_SWEEP_HEADERS),
+            digits=4,
+            headers=SPAN_SWEEP_HEADERS,
+        )
+        span_sweep_section = f"""
+## Attention span sweep
+
+The models below are scored again with attention held to spans shorter than
+their own. The last row of each model is its own span. Differences are the
+swept span minus the own span on the same transcript pairs, at the longest
+length group. Accuracy that falls as the span narrows rests on attention
+beyond that span. `attention_span_sweep_scores.csv` holds every length and
+endpoint with bootstrap intervals, Cohen's d_z, and `q_value_bh`, adjusted
+within each endpoint across all models, length groups, and spans. A span that
+reaches every pair of a transcript changes nothing and is not counted.
+
+{span_sweep_table}
+"""
     length_columns = (
         "model",
         "length",
@@ -1390,6 +1790,25 @@ def _write_report(
     )
     sensitivity_paired_table = _markdown_table(
         _paired_tests_for_report(paired_tests, SENSITIVITY_PAIRED_ENDPOINTS),
+        paired_columns,
+    )
+    accuracy_paired_table = _markdown_table(
+        _paired_tests_for_report(paired_tests, (MASKED_ACCURACY_ENDPOINT,)),
+        paired_columns,
+    )
+    restricted_paired_longest = (
+        restricted_paired_tests[
+            restricted_paired_tests["length"]
+            == restricted_paired_tests["length"].max()
+        ]
+        if "length" in restricted_paired_tests
+        else pd.DataFrame()
+    )
+    restricted_paired_table = _markdown_table(
+        _paired_tests_for_report(
+            restricted_paired_longest,
+            [endpoint for endpoint, _ in RESTRICTED_PAIRED_METRICS],
+        ),
         paired_columns,
     )
     context_columns = [
@@ -1496,6 +1915,32 @@ indicate stronger regional separation of same-nucleotide representations.
 (the most distal 25%). Lower values indicate weaker propagation into distant
 unchanged regions.
 
+## Masked-nucleotide accuracy
+
+On every native transcript, {mask_rate:.0%} of the positions are replaced by
+the mask token. The positions are drawn once per transcript and shared by
+all models. Accuracy is the fraction of masked positions whose argmax over
+the A, C, G, T logits is the original nucleotide. Length groups hold
+different transcripts, so compare models within a group, not groups with
+each other.
+
+{mlm_table}
+
+## Attention held to the pretraining span
+
+For a model pretrained on `context_window` tokens, every attention layer is
+masked so that a query attends only to keys fewer than `context_window`
+tokens away. Weights and position encodings are unchanged. HydraRNA has
+attention in two of its twelve layers; only those are masked. The three cosine
+endpoints and the masked-nucleotide accuracy are then recomputed. Differences
+are restricted minus unrestricted on the same transcript pairs, at the
+longest length group. `q_value_bh` is Benjamini–Hochberg FDR within each
+endpoint across all models and length groups; a comparison whose differences
+are all zero is not counted. `restricted_attention_scores.csv` holds every
+length with paired-bootstrap intervals and Cohen's d_z.
+
+{restricted_table}
+{span_sweep_section}
 ## Paired model comparisons
 
 Differences are `model_b - model_a` on the same transcript pairs. Confidence
@@ -1503,8 +1948,10 @@ intervals use paired bootstrap. `q_value_bh` is Benjamini–Hochberg FDR
 computed **separately within each primary endpoint family**: `ΔCS`
 (`final_context_gain`), `C_cross`
 (`final_cross_region_same_base_cosine`), and `D_distal`
-(`final_relative_distal_075`). Attention uses the same procedure inside
-`late_layer_attention_convergence` only.
+(`final_relative_distal_075`). Masked-nucleotide accuracy
+(`masked_nucleotide_accuracy`) and attention
+(`late_layer_attention_convergence`) are each adjusted the same way within
+their own family.
 
 ### Primary endpoints
 
@@ -1519,6 +1966,20 @@ undefined when no such positions exist. Relative-distal `r ≥ 0.25` and
 primary threshold `0.75` and is not BH-adjusted.
 
 {sensitivity_paired_table}
+
+### Masked-nucleotide accuracy
+
+{accuracy_paired_table}
+
+## Paired model comparisons with attention held to the pretraining span
+
+The same comparisons with every model's attention held to its own
+pretraining span, at the longest length group, for the three primary
+endpoints and the masked-nucleotide accuracy. `q_value_bh` is adjusted within
+each endpoint across all model pairs and length groups.
+`restricted_model_pairwise_tests.csv` holds every length.
+
+{restricted_paired_table}
 
 ## Layer-wise structured-pattern specificity and convergence
 
@@ -1585,6 +2046,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     attention_dir = _resolve(
         args.attention_dir or result_root / "attention", PROJECT_ROOT
     )
+    mlm_dir = _resolve(args.mlm_dir or result_root / "mlm", PROJECT_ROOT)
+    restricted_attention_dir = _resolve(
+        args.restricted_attention_dir or result_root / "restricted_attention",
+        PROJECT_ROOT,
+    )
     output_dir = _resolve(args.output or result_root / "analysis", PROJECT_ROOT)
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1601,6 +2067,21 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     trajectories = _use_length_groups(
         _read_csv(
             cosine_dir / "cosine_token_trajectories.csv", required=False
+        )
+    )
+    mlm_units = _use_length_groups(
+        _read_csv(mlm_dir / "mlm_units.csv", required=False)
+    )
+    restricted_raw = _use_length_groups(
+        _read_csv(
+            restricted_attention_dir / "restricted_attention_units.csv",
+            required=False,
+        )
+    )
+    restricted_units = _restricted_units(restricted_raw)
+    span_sweep_units = _span_units(
+        _use_length_groups(
+            _read_csv(restricted_attention_dir / SPAN_SWEEP_FILE, required=False)
         )
     )
 
@@ -1664,8 +2145,27 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         args.bootstrap_replicates,
         args.bootstrap_seed,
     )
+    pair_metrics = _pair_level_paper_metrics(context_controls, diffusion_final)
     length_primary = _length_primary_scores(
-        _pair_level_paper_metrics(context_controls, diffusion_final),
+        pair_metrics,
+        args.bootstrap_replicates,
+        args.bootstrap_seed,
+    )
+    mlm_scores = _mlm_accuracy_scores(
+        mlm_units,
+        args.bootstrap_replicates,
+        args.bootstrap_seed,
+    )
+    unrestricted_units = _unrestricted_units(pair_metrics, mlm_units)
+    restricted_scores = _restricted_attention_scores(
+        unrestricted_units,
+        restricted_units,
+        args.bootstrap_replicates,
+        args.bootstrap_seed,
+    )
+    span_sweep_scores = _attention_span_sweep_scores(
+        span_sweep_units,
+        _span_units(restricted_raw),
         args.bootstrap_replicates,
         args.bootstrap_seed,
     )
@@ -1674,6 +2174,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         context_controls,
         diffusion_final,
         attention_convergence,
+        args.bootstrap_replicates,
+        args.bootstrap_seed,
+        masked_accuracy=mlm_units,
+    )
+    restricted_paired_tests = _restricted_model_pairwise_tests(
+        restricted_units,
         args.bootstrap_replicates,
         args.bootstrap_seed,
     )
@@ -1710,6 +2216,20 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     attention_similarity.to_csv(
         output_dir / "attention_similarity_layer_association.csv", index=False
     )
+    if not mlm_scores.empty:
+        mlm_scores.to_csv(output_dir / "mlm_accuracy_scores.csv", index=False)
+    if not restricted_scores.empty:
+        restricted_scores.to_csv(
+            output_dir / "restricted_attention_scores.csv", index=False
+        )
+    if not span_sweep_scores.empty:
+        span_sweep_scores.to_csv(
+            output_dir / "attention_span_sweep_scores.csv", index=False
+        )
+    if not restricted_paired_tests.empty:
+        restricted_paired_tests.to_csv(
+            output_dir / "restricted_model_pairwise_tests.csv", index=False
+        )
 
     if args.no_plots:
         plot_paths: list[str] = []
@@ -1721,6 +2241,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             context_controls=context_controls,
             trajectories=trajectories,
             attention_similarity=attention_similarity,
+            masked_accuracy=mlm_units,
+        )
+        plot_paths.extend(
+            plot_restricted_attention(
+                unrestricted_units,
+                restricted_units,
+                output_dir / "plots" / "cosine",
+            )
         )
         plot_paths.extend(
             plot_attention_diagnostics(
@@ -1739,6 +2267,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         attention_convergence,
         sum("/plots/cosine/" in path for path in plot_paths),
         sum("/plots/attention/" in path for path in plot_paths),
+        mlm_scores,
+        restricted_scores,
+        float(experiment.values["mlm"]["mask_rate"]),
+        span_sweep_scores,
+        restricted_paired_tests,
     )
     metadata = {
         "schema_version": 2,
@@ -1748,6 +2281,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "config": public_path(experiment.config_path, PROJECT_ROOT),
         "cosine_dir": public_path(cosine_dir, PROJECT_ROOT),
         "attention_dir": public_path(attention_dir, PROJECT_ROOT),
+        "mlm_dir": public_path(mlm_dir, PROJECT_ROOT),
+        "restricted_attention_dir": public_path(
+            restricted_attention_dir, PROJECT_ROOT
+        ),
         "output_dir": public_path(output_dir, PROJECT_ROOT),
         "bootstrap_replicates": args.bootstrap_replicates,
         "bootstrap_seed": args.bootstrap_seed,
@@ -1760,6 +2297,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "attention_dynamics_rows": len(attention_dynamics),
         "attention_similarity_rows": len(attention_similarity),
         "token_trajectory_rows": len(trajectories),
+        "mlm_accuracy_rows": len(mlm_scores),
+        "restricted_attention_rows": len(restricted_scores),
+        "attention_span_sweep_rows": len(span_sweep_scores),
+        "restricted_model_pairwise_tests": len(restricted_paired_tests),
         "attention_cosine_layer_alignment": "attention_l_to_hidden_l_plus_1",
         "plots": plot_paths,
     }

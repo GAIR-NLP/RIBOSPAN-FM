@@ -1,0 +1,27 @@
+name: rnafm
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - tqdm
+  - pandas
+  - numpy
+  - pip:
+      # Installed via pip so the CUDA build of PyTorch is picked up correctly.
+      # If conda CUDA resolution is uncertain, see the README for the explicit
+      # pip command (incl. the CUDA wheel index for torch).
+      # Pinned to the transformers 4.x line: transformers 5.x's slow tokenizer
+      # loader drops plain vocab.txt tokens, which breaks our char/k-mer vocabs.
+      - torch
+      - transformers==4.46.3
+      - datasets==3.1.0
+      - accelerate>=0.34,<1.2
+      - tokenizers>=0.20,<0.21
+      - matplotlib
+# --- Optional: Transformer+Mamba hybrid backbone (separate manual step) ---
+# Do NOT add mamba-ssm/causal-conv1d here: their PyPI dependency resolution
+# upgrades torch (to a cu13 build) and breaks the env. Install the PREBUILT
+# wheels matching torch2.5/cu12/cp311 with --no-deps instead — see the
+# "Quick start" section of the README.

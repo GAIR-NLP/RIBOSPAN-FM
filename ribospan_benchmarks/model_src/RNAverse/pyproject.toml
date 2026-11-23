@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rnaverse"
+version = "0.1.0"
+description = "A multimodal RNA foundation model that jointly learns from sequence, structural, and functional data to enable both predictive modeling and generative design."
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Jianbo Ma", email = "majbchiya@outlook.com"},
+]
+keywords = ["RNA", "foundation model", "language model", "multimodal", "deep learning", "bioinformatics", "RNA design"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+# NOTE: PyTorch will install CPU-only version by default.
+# For GPU support, please install PyTorch with CUDA manually first:
+# using the command in https://github.com/Chiyasa/RNAverse#readme or on the official PyTorch website
+
+# Installation instructions:
+# - pip install rnaverse
+
+dependencies = [         
+    "transformers==4.34.0", 
+    "numpy==1.26.1",        
+    "h5py==3.10.0",
+    "accelerate==0.23.0",
+    "scipy==1.11.3",
+    "scikit-learn==1.3.1",
+    "pandas==2.1.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/Chiyasa/RNAverse"
+Repository = "https://github.com/Chiyasa/RNAverse"
+Documentation = "https://github.com/Chiyasa/RNAverse#readme"
+Issues = "https://github.com/Chiyasa/RNAverse/issues"
+
+[tool.setuptools.packages.find]
+include = ["rnaverse*"]

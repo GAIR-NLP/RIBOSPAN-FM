@@ -2,7 +2,7 @@
 # Copyright (c) 2026 RIBOSPAN Team Authors.
 # SPDX-License-Identifier: Apache-2.0
 
-"""Run the shared RNA contextualization manifest, cosine, and attention stages."""
+"""Run the benchmark stages, from the pair manifest to the analysis."""
 
 from __future__ import annotations
 
@@ -18,7 +18,14 @@ from .generation import generate_manifest
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-STAGES = ("generate", "attention", "cosine", "analyze")
+STAGES = (
+    "generate",
+    "attention",
+    "cosine",
+    "mlm",
+    "restricted_attention",
+    "analyze",
+)
 
 
 def _utc_now() -> str:
@@ -57,6 +64,8 @@ def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--no-resume", action="store_true")
     parser.add_argument("--skip-generate", action="store_true")
     parser.add_argument("--skip-attention", action="store_true")
+    parser.add_argument("--skip-mlm", action="store_true")
+    parser.add_argument("--skip-restricted-attention", action="store_true")
     parser.add_argument("--skip-analyze", action="store_true")
     parser.add_argument("--summary-only", action="store_true")
     parser.add_argument("--attention-layers", nargs="+", default=None)
@@ -137,6 +146,65 @@ def _run_cosine(
     return json.loads(metadata_path.read_text(encoding="utf-8"))
 
 
+def _stage_argv(
+    args: argparse.Namespace,
+    experiment: Any,
+    manifest_path: Path,
+    output_dir: Path,
+) -> list[str]:
+    argv = [
+        "--config",
+        str(experiment.config_path),
+        "--profile",
+        experiment.profile,
+        "--manifest",
+        str(manifest_path),
+        "--output",
+        str(output_dir),
+    ]
+    if args.registry:
+        argv.extend(["--models", args.registry])
+    for model in args.models or ():
+        argv.extend(["--model", model])
+    if args.device:
+        argv.extend(["--device", args.device])
+    if args.dtype:
+        argv.extend(["--dtype", args.dtype])
+    if args.max_jobs is not None:
+        argv.extend(["--max-jobs", str(args.max_jobs)])
+    if args.no_resume:
+        argv.append("--no-resume")
+    return argv
+
+
+def _run_mlm(
+    args: argparse.Namespace,
+    experiment: Any,
+    output_root: Path,
+    manifest_path: Path,
+) -> dict[str, Any]:
+    from . import mlm
+
+    output_dir = output_root / "mlm"
+    mlm.main(_stage_argv(args, experiment, manifest_path, output_dir))
+    return json.loads((output_dir / "run_metadata.json").read_text(encoding="utf-8"))
+
+
+def _run_restricted_attention(
+    args: argparse.Namespace,
+    experiment: Any,
+    output_root: Path,
+    manifest_path: Path,
+) -> dict[str, Any]:
+    from . import restricted_attention
+
+    output_dir = output_root / "restricted_attention"
+    restricted_attention.main(
+        _stage_argv(args, experiment, manifest_path, output_dir)
+    )
+    return json.loads((output_dir / "run_metadata.json").read_text(encoding="utf-8"))
+
+
 def _run_attention(
     args: argparse.Namespace,
     experiment: Any,
@@ -201,6 +269,10 @@ def _run_analyze(
         str(output_root / "cosine"),
         "--attention-dir",
         str(output_root / "attention"),
+        "--mlm-dir",
+        str(output_root / "mlm"),
+        "--restricted-attention-dir",
+        str(output_root / "restricted_attention"),
         "--output",
         str(output_root / "analysis"),
         "--bootstrap-replicates",
@@ -216,6 +288,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         requested = [stage for stage in requested if stage != "generate"]
     if args.skip_attention:
         requested = [stage for stage in requested if stage != "attention"]
+    if args.skip_mlm:
+        requested = [stage for stage in requested if stage != "mlm"]
+    if args.skip_restricted_attention:
+        requested = [
+            stage for stage in requested if stage != "restricted_attention"
+        ]
     if args.skip_analyze:
         requested = [stage for stage in requested if stage != "analyze"]
     if (
@@ -246,6 +324,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             args, experiment, output_root, manifest_path
         ),
         "attention": lambda: _run_attention(
+            args, experiment, output_root, manifest_path
+        ),
+        "mlm": lambda: _run_mlm(args, experiment, output_root, manifest_path),
+        "restricted_attention": lambda: _run_restricted_attention(
             args, experiment, output_root, manifest_path
         ),
         "analyze": lambda: _run_analyze(args, experiment, output_root),

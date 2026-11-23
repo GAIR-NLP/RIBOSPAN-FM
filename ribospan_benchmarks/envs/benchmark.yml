@@ -18,7 +18,7 @@ dependencies:
       - ml-collections==1.1.0
       - pyyaml==6.0.3
       - pandas==3.0.5
-      - pyarrow==19.0.1
+      - pyarrow==17.0.0
       - scikit-learn==1.9.0
       - matplotlib==3.11.1
       - seaborn==0.13.2
@@ -34,5 +34,9 @@ dependencies:
       - bitarray==3.10.1
       - sacrebleu==2.6.0
       - regex==2026.7.19
+      - huggingface_hub==0.36.2
+      - datasets==2.21.0
+      - biopython==1.88
       - mamba-ssm==2.2.2
+      - causal-conv1d==1.5.0.post8
       - flash-attn==2.7.4.post1

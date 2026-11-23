@@ -11,6 +11,8 @@ YARN_SUFFIX = "-YaRN"
 
 MODEL_ORDER = (
     "HydraRNA",
+    "RiboGRAM",
+    "RNAverse",
     "AIDO.RNA-CDS",
     "AIDO.RNA-CDS-YaRN",
     "RIBOSPAN-1K-15",
@@ -32,18 +34,32 @@ DISPLAY_NAMES = {
     "RIBOSCOPE-1.6B-run5-2": "RIBOSPAN-10K-40",
 }
 
+# Bar colors of the long-context figure in the technical report. RiboGRAM and
+# RNAverse are not in that figure; theirs are chosen from the same muted range.
 BASE_MODEL_COLORS = {
-    "HydraRNA": "#F25C9A",
-    "AIDO.RNA-CDS": "#6E6E6E",
-    "RIBOSPAN-1K-15": "#6B5B95",
-    "RIBOSPAN-1K-40": "#1F7A4C",
-    "RIBOSPAN-10K-15": "#E3B505",
-    "RIBOSPAN-10K-40": "#C45C26",
-    "AIDO.RNA-1.6B-CDS": "#6E6E6E",
-    "RIBOSCOPE-1.6B-run4": "#6B5B95",
-    "RIBOSCOPE-1.6B-run4-2": "#1F7A4C",
-    "RIBOSCOPE-1.6B-run5": "#E3B505",
-    "RIBOSCOPE-1.6B-run5-2": "#C45C26",
+    "HydraRNA": "#A58FA3",
+    "AIDO.RNA-CDS": "#77736D",
+    "RiboGRAM": "#6F9EA6",
+    "RNAverse": "#A3A572",
+    "RIBOSPAN-1K-15": "#596C9B",
+    "RIBOSPAN-1K-40": "#557F73",
+    "RIBOSPAN-10K-15": "#C2A454",
+    "RIBOSPAN-10K-40": "#B87558",
+    "AIDO.RNA-1.6B-CDS": "#77736D",
+    "RIBOSCOPE-1.6B-run4": "#596C9B",
+    "RIBOSCOPE-1.6B-run4-2": "#557F73",
+    "RIBOSCOPE-1.6B-run5": "#C2A454",
+    "RIBOSCOPE-1.6B-run5-2": "#B87558",
+}
+
+# Color of a model drawn next to its YaRN variant, which keeps the base color.
+PAIRED_MODEL_COLORS = {
+    "AIDO.RNA-CDS": "#C8C6C1",
+    "RIBOSPAN-1K-15": "#A9B7D3",
+    "RIBOSPAN-1K-40": "#A8C2B8",
+    "AIDO.RNA-1.6B-CDS": "#C8C6C1",
+    "RIBOSCOPE-1.6B-run4": "#A9B7D3",
+    "RIBOSCOPE-1.6B-run4-2": "#A8C2B8",
 }
 
 LIGHTEN_AMOUNT = 0.5
@@ -95,7 +111,7 @@ def model_color(model: object, *, present: set[str] | None = None) -> str | None
         return base_color
     yarn_sibling = f"{base}{YARN_SUFFIX}"
     if present is not None and yarn_sibling in present:
-        return lighten_hex(base_color)
+        return PAIRED_MODEL_COLORS.get(base, lighten_hex(base_color))
     return base_color
 
 

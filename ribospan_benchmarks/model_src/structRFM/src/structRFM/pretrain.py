@@ -1,0 +1,168 @@
+import os
+import random
+import argparse
+from datetime import datetime
+
+import torch
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.utils.data.distributed import DistributedSampler
+import tensorboard
+from transformers import TrainingArguments, Trainer
+from transformers import DataCollatorForLanguageModeling
+
+from .model import get_structRFM, get_llama_causal_model, get_model_scale
+from .data import get_mlm_tokenizer, get_ar_tokenizer, preprocess_and_load_dataset, PretrainDataCollatorWithStructure
+
+
+def set_seed(seed, deterministic=True):
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.backends.cudnn.deterministic = deterministic
+        torch.backends.cudnn.benchmark = not deterministic
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='RNA LM')
+    parser.add_argument('--run_name', type=str, required=True)
+    # Data args
+    parser.add_argument('--data_path', type=str, default='../RNAcentral/RNAcentral_512_MUSES_connects.csv')
+    parser.add_argument('--tag', type=str, choices=['mlm', 'ar'], default='mlm')
+    parser.add_argument('--max_length', type=int, default=514, help='Max length of tokens')
+    parser.add_argument('--seed', type=int, default=42)
+
+    # Model args
+    parser.add_argument('--dim', type=int, default=768, help='hidden dim')
+    parser.add_argument('--layer', type=int, default=12)
+    parser.add_argument('--num_attention_heads', type=int, default=12)
+    parser.add_argument('--model_scale', type=str, choices=['base', 'large', 'custom'], default='custom')
+    parser.add_argument('--from_pretrained', type=str, help='for model')
+    parser.add_argument('--resume_from_checkpoint', type=str, help='for trainer and checkpoint, default resume_from_checkpoint=True')
+
+    # Training args
+    parser.add_argument('--use_DDP', action='store_true')
+    parser.add_argument('--lr', type=float, default=0.0001, help='learning rate')
+    parser.add_argument('--epoch', type=int, default=30, help='learning rate')
+    parser.add_argument('--batch_size', type=int, default=128)
+    parser.add_argument('--mlm_structure', action='store_true')
+    parser.add_argument('--mlm_probability', type=float, default=0.15)
+    args = parser.parse_args()
+    return args
+
+
+def pretrain(args, tag):
+    model_scale_paras = get_model_scale(args.model_scale)
+    print('model_scale', args.model_scale, model_scale_paras)
+    for k, v in model_scale_paras.items():
+        setattr(args, k, v)
+
+    os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+    set_seed(args.seed)
+    if tag == 'mlm':
+        tokenizer = get_mlm_tokenizer(max_length=args.max_length)
+    elif tag == 'ar':
+        tokenizer = get_ar_tokenizer(max_length=args.max_length)
+
+    model = None
+    if tag=='mlm':
+        model = get_structRFM(dim=args.dim, layer=args.layer, num_attention_heads=args.num_attention_heads, from_pretrained=args.from_pretrained, tokenizer=tokenizer, max_length=args.max_length)
+        model_name = 'structRFM'
+    else:
+        model = get_llama_causal_model(args.dim, args.layer, args.from_pretrained, tokenizer=tokenizer, max_length=args.max_length)
+        model_name = 'llama'
+    model_param_size = sum(t.numel() for t in model.parameters())
+    print(model)
+    print(f"{model_name} model paras: {model_param_size/1e6:.1f}M")
+
+    # DDP setting
+    if args.use_DDP:
+        local_rank = int(os.environ['LOCAL_RANK'])
+        world_size = int(os.environ.get("WORLD_SIZE", 1))
+        dist.init_process_group(backend='nccl')
+        torch.cuda.set_device(local_rank)
+        print(f"World size: {world_size}, Local rank: {local_rank}")
+
+        ## No need to explictly use DDP func, transformers.trainer will do
+        # model = DDP(model, device_ids=[local_rank])
+
+    dataset = preprocess_and_load_dataset(args.data_path, tokenizer, tag, with_structure=args.mlm_structure)
+    split_dataset = dataset
+    if 'test' not in split_dataset:
+        if 'validate' in dataset:
+            split_dataset['test'] = split_dataset['validate']
+        else:
+            split_dataset = dataset['train'].train_test_split(test_size=0.05, seed=args.seed)
+    print(split_dataset)
+
+    # DataCollatorWithPadding, DataCollatorForSeq2Seq, ForWholeWordMask
+    data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm= tag=='mlm')
+    print('MLM_structure:', args.mlm_structure)
+    total_steps = len(split_dataset['train'])//args.batch_size 
+    if tag == 'mlm' and args.mlm_structure:
+        # structure-directed masking
+        data_collator = PretrainDataCollatorWithStructure(tokenizer=tokenizer, mlm=True, mlm_probability=args.mlm_probability)
+
+    model_size = f'{args.dim}_{args.layer}'
+    step_interval = total_steps//10
+    extra_training_args = {}
+    training_args = TrainingArguments(
+        output_dir=args.run_name,
+        learning_rate=args.lr,
+        num_train_epochs=args.epoch,
+        max_steps=total_steps*args.epoch,
+        weight_decay=0., # TODO
+        gradient_accumulation_steps=1, # if gpu memory is not enough, increase this
+        per_device_train_batch_size=args.batch_size,
+        warmup_steps=2_000, 
+        max_grad_norm=1.0,
+        logging_strategy="steps",
+        logging_steps=step_interval//10,
+        evaluation_strategy="steps",
+        eval_steps=step_interval,
+        save_strategy="steps", 
+        save_steps=step_interval, 
+        load_best_model_at_end=True,
+        metric_for_best_model='eval_loss', # TODO
+        greater_is_better=False,
+        fp16=True,
+        report_to = "tensorboard",
+        **extra_training_args,
+    )
+    my_callbacks = []
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=split_dataset["train"], # torch.utils.data.Dataset or torch.utils.data.IterableDataset: if torch.utils.data.Dataset, 则会自动删除模型的 forward() 方法不接受的列。 这也太坑了, data_collator 要用到的时候，被删除了， 找了半天的bug
+        eval_dataset=split_dataset["test"],
+        data_collator=data_collator,
+        tokenizer=tokenizer,
+        callbacks=my_callbacks,
+    )
+
+    if args.resume_from_checkpoint and os.path.isdir(args.resume_from_checkpoint):
+        print(f'Resume_from_checkpoint {args.resume_from_checkpoint}')
+        trainer.train(resume_from_checkpoint=args.resume_from_checkpoint)
+    elif any(f.startswith('checkpoint') for f in os.listdir(args.run_name)):
+        print(f'Resume_from_checkpoint...')
+        trainer.train(resume_from_checkpoint=True)
+    else:
+        trainer.train()
+
+    if not args.use_DDP or local_rank == 0:
+        trainer.save_model(os.path.join(args.run_name, f"trainer_ep{args.epoch}"))
+        tokenizer.save_pretrained(os.path.join(args.run_name, f"tokenizer_ep{args.epoch}"))
+
+
+def run_pretrain():
+    print(f'Begin time: {datetime.now()}')
+    args = parse_args()
+    assert args.tag in {'mlm', 'ar'}, f'tag={args.tag} should be "mlm" or "ar"'
+    pretrain(args, args.tag)
+    print(f'End time: {datetime.now()}')
+
+
+if __name__ == '__main__':
+    run_pretrain()

@@ -357,4 +357,22 @@ def load_encoder(
             dtype=dtype,
             requested_max_length=requested_max_length,
         )
+    if backend == "rnaverse":
+        from scripts.rnaverse_io import load_rnaverse_encoder
+
+        return load_rnaverse_encoder(
+            spec,
+            device=device,
+            dtype=dtype,
+            requested_max_length=requested_max_length,
+        )
+    if backend == "ribogram":
+        from scripts.ribogram_io import load_ribogram_encoder
+
+        return load_ribogram_encoder(
+            spec,
+            device=device,
+            dtype=dtype,
+            requested_max_length=requested_max_length,
+        )
     raise ValueError(f"unsupported model backend: {backend!r}")

@@ -1,0 +1,1 @@
+place the RNAverse, RNAverse-aptamer, RNAverse-UTR, and RNAverse-SHAPE under this directory.

@@ -1,7 +1,7 @@
 # Copyright (c) 2026 RIBOSPAN Team Authors.
 # SPDX-License-Identifier: Apache-2.0
 
-"""Unified MLM log-prob interface over RNA-FM / RiNALMo / HF / HydraRNA."""
+"""Unified MLM log-prob interface over RNA-FM / RiNALMo / HF / HydraRNA / RNAverse / RiboGRAM."""
 
 from __future__ import annotations
 
@@ -160,4 +160,16 @@ def build_scorer(loaded: Any) -> MLMScorer:
             offset=1,
             max_nucleotides=max_nt,
         )
+    if name == "LoadedRNAverse":
+        from scripts.rnaverse_io import RNAverseScorer
+
+        return RNAverseScorer(loaded)
+    if name == "LoadedRiboGRAM":
+        from scripts.ribogram_io import RiboGRAMScorer
+
+        return RiboGRAMScorer(loaded)
+    if name == "LoadedLIMBER":
+        from scripts.limber_io import LIMBERScorer
+
+        return LIMBERScorer(loaded)
     raise TypeError(f"no MLM scorer for {name}")

@@ -6,7 +6,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Sequence
 
 import numpy as np
 import pandas as pd
@@ -40,11 +40,49 @@ LENGTH_BARPLOT_KWARGS = {
     "capsize": 0.12,
     "err_kws": {"linewidth": 1.1, "color": "#444444"},
     "edgecolor": "white",
+    # Bars carry the model colors as given, without seaborn's desaturation.
+    "saturation": 1.0,
 }
 TABLE_METRIC_COLUMNS = (
     "delta_context_separation_structured_vs_native",
     "cross_context_same_base_cos_structured",
     "relative_distal_075",
+)
+MLM_ACCURACY_COLUMN = "mlm_accuracy"
+# One stacked row of the length-scaling charts, in inches.
+TABLE_FIGURE_WIDTH = 14.0
+TABLE_ROW_HEIGHT = 4.38
+MODEL_LEGEND_COLUMNS = 2
+MODEL_LEGEND_FONTSIZE = 8
+# The stacked charts are drawn on a larger canvas than the side-by-side one.
+TABLE_LEGEND_FONTSIZE = 10
+# Models with this display-name prefix share the second legend column.
+LEGEND_FAMILY_PREFIX = "RIBOSPAN"
+TABLE_METRIC_SPECS = (
+    (
+        "delta_context_separation_structured_vs_native",
+        "Additional Context Separation",
+        "ΔCS ↑",
+        (0.0, 0.6),
+    ),
+    (
+        "cross_context_same_base_cos_structured",
+        "Cross-region Same-base Similarity",
+        "C_cross ↓",
+        (0.0, 0.9),
+    ),
+    (
+        "relative_distal_075",
+        "Relative-distal Diffusion",
+        "D_distal",
+        (0.0, 0.05),
+    ),
+)
+MLM_ACCURACY_SPEC = (
+    MLM_ACCURACY_COLUMN,
+    "Masked-nucleotide Accuracy",
+    "Accuracy ↑",
+    (0.0, 1.0),
 )
 
 
@@ -873,26 +911,63 @@ def _draw_length_barplot(
     )
 
 
+def _draw_model_legend(
+    axis: Any,
+    extra_handles: Sequence[Any] = (),
+    fontsize: float = MODEL_LEGEND_FONTSIZE,
+) -> None:
+    """Draw the model legend with the RIBOSPAN family alone in the second column.
+
+    The first column holds the other models, then ``extra_handles`` below a
+    blank row. Invisible entries pad the shorter column, since matplotlib
+    fills a legend column by column.
+    """
+
+    from matplotlib.patches import Patch  # type: ignore
+
+    handles, labels = axis.get_legend_handles_labels()
+    entries = list(zip(handles, labels))
+    family = [entry for entry in entries if entry[1].startswith(LEGEND_FAMILY_PREFIX)]
+    others = [entry for entry in entries if entry not in family]
+    blank = (Patch(facecolor="none", edgecolor="none"), " ")
+    extras = [(handle, handle.get_label()) for handle in extra_handles]
+    first = others + ([blank, *extras] if others and extras else extras)
+    if first and family:
+        rows = max(len(first), len(family))
+        first += [blank] * (rows - len(first))
+        family += [blank] * (rows - len(family))
+    ordered = first + family
+    axis.legend(
+        handles=[handle for handle, _ in ordered],
+        labels=[label for _, label in ordered],
+        title="Model",
+        ncol=MODEL_LEGEND_COLUMNS,
+        labelspacing=0.3,
+        borderaxespad=0.3,
+        frameon=True,
+        framealpha=0.8,
+        fontsize=fontsize,
+    )
+
+
 def _style_length_bar_axis(
     axis: Any,
     *,
     title: str,
     ylabel: str,
     show_legend: bool,
+    legend_extra_handles: Sequence[Any] = (),
+    legend_fontsize: float = MODEL_LEGEND_FONTSIZE,
 ) -> None:
     axis.set_title(title)
     axis.set_xlabel("Input length (nt)")
     axis.set_ylabel(ylabel)
-    axis.grid(True, alpha=0.25)
+    axis.grid(True, axis="y", alpha=0.25)
+    axis.grid(False, axis="x")
     axis.margins(y=0.08)
     legend = axis.get_legend()
     if show_legend:
-        axis.legend(
-            title="Model",
-            frameon=True,
-            framealpha=0.8,
-            fontsize=8,
-        )
+        _draw_model_legend(axis, legend_extra_handles, legend_fontsize)
     elif legend is not None:
         legend.remove()
 
@@ -949,21 +1024,43 @@ def _table_metric_units(
     )
 
 
+def _with_masked_accuracy(
+    units: pd.DataFrame,
+    masked_accuracy: pd.DataFrame | None,
+) -> pd.DataFrame:
+    """Attach the mlm stage's transcript-level accuracy to the pair endpoints."""
+
+    keys = ["model", "length", "pair_group_id"]
+    if (
+        units.empty
+        or masked_accuracy is None
+        or masked_accuracy.empty
+        or {*keys, MLM_ACCURACY_COLUMN} - set(masked_accuracy)
+    ):
+        return units
+    accuracy = masked_accuracy[[*keys, MLM_ACCURACY_COLUMN]].copy()
+    accuracy["length"] = pd.to_numeric(accuracy["length"], errors="coerce")
+    accuracy = accuracy.groupby(keys, as_index=False)[MLM_ACCURACY_COLUMN].mean()
+    output = units.copy()
+    output["length"] = pd.to_numeric(output["length"], errors="coerce")
+    return output.merge(accuracy, on=keys, how="left")
+
+
 def _write_table_metric_summary(units: pd.DataFrame, output_dir: Path) -> str:
     output_dir.mkdir(parents=True, exist_ok=True)
+    columns = [
+        column
+        for column in (*TABLE_METRIC_COLUMNS, MLM_ACCURACY_COLUMN)
+        if column in units or column in TABLE_METRIC_COLUMNS
+    ]
     if units.empty:
-        summary = pd.DataFrame(
-            columns=["model", "length", "n_pairs", *TABLE_METRIC_COLUMNS]
-        )
+        summary = pd.DataFrame(columns=["model", "length", "n_pairs", *columns])
     else:
         summary = (
             units.groupby(["model", "length"], as_index=False)
             .agg(
                 n_pairs=("pair_group_id", "nunique"),
-                **{
-                    column: (column, "mean")
-                    for column in TABLE_METRIC_COLUMNS
-                },
+                **{column: (column, "mean") for column in columns},
             )
             .copy()
         )
@@ -1036,7 +1133,7 @@ def _plot_length_scaling_overview(
     context_summary = _with_length_label(_with_display_model(context_summary))
     diffusion_final = _with_length_label(_with_display_model(diffusion_final))
     figure, axes = plt.subplots(
-        1, 2, figsize=(15, 6), constrained_layout=True
+        1, 2, figsize=(19.6, 6), constrained_layout=True
     )
     specs = (
         (
@@ -1089,12 +1186,15 @@ def _style_figure7_axis(
     ylim: tuple[float, float],
     show_legend: bool,
     show_xlabel: bool,
+    legend_extra_handles: Sequence[Any] = (),
 ) -> None:
     _style_length_bar_axis(
         axis,
         title=title,
         ylabel=ylabel,
         show_legend=show_legend,
+        legend_extra_handles=legend_extra_handles,
+        legend_fontsize=TABLE_LEGEND_FONTSIZE,
     )
     axis.set_ylim(*ylim)
     axis.set_facecolor("white")
@@ -1109,10 +1209,16 @@ def _plot_length_scaling_table_metrics(
     diffusion: pd.DataFrame,
     output_dir: Path,
     stem_prefix: str,
+    masked_accuracy: pd.DataFrame | None = None,
 ) -> list[str]:
-    """Plot the three table endpoints as a stacked length-scaling chart."""
+    """Plot the table endpoints as a stacked length-scaling chart.
 
-    units = _table_metric_units(comparison, diffusion)
+    Masked-nucleotide accuracy is the fourth row when the mlm stage has run.
+    """
+
+    units = _with_masked_accuracy(
+        _table_metric_units(comparison, diffusion), masked_accuracy
+    )
     paths: list[str] = []
     if not units.empty:
         paths.append(_write_table_metric_summary(units, output_dir))
@@ -1126,39 +1232,19 @@ def _plot_length_scaling_table_metrics(
     display_models = [display_model_name(model) for model in models]
     palette = display_model_colors(models)
     plot_data = _with_length_label(_with_display_model(units))
+    specs = list(TABLE_METRIC_SPECS)
+    if MLM_ACCURACY_COLUMN in units and units[MLM_ACCURACY_COLUMN].notna().any():
+        specs.append(MLM_ACCURACY_SPEC)
     figure, axes = plt.subplots(
-        3,
+        len(specs),
         1,
-        figsize=(8.4, 10.8),
+        figsize=(TABLE_FIGURE_WIDTH, TABLE_ROW_HEIGHT * len(specs)),
         sharex=True,
         facecolor="white",
         constrained_layout=True,
     )
     figure.patch.set_facecolor("white")
-    specs = (
-        (
-            axes[0],
-            "delta_context_separation_structured_vs_native",
-            "Additional Context Separation",
-            "ΔCS ↑",
-            (0.0, 0.5),
-        ),
-        (
-            axes[1],
-            "cross_context_same_base_cos_structured",
-            "Cross-region Same-base Similarity",
-            "C_cross ↓",
-            (0.0, 0.8),
-        ),
-        (
-            axes[2],
-            "relative_distal_075",
-            "Relative-distal Diffusion",
-            "D_distal",
-            (0.0, 0.05),
-        ),
-    )
-    for index, (axis, metric, title, ylabel, ylim) in enumerate(specs):
+    for index, (axis, (metric, title, ylabel, ylim)) in enumerate(zip(axes, specs)):
         _draw_length_barplot(
             axis,
             plot_data,
@@ -1313,6 +1399,7 @@ def plot_cosine_diagnostics(
     context_controls: pd.DataFrame | None = None,
     trajectories: pd.DataFrame | None = None,
     attention_similarity: pd.DataFrame | None = None,
+    masked_accuracy: pd.DataFrame | None = None,
 ) -> list[str]:
     """Generate complementary cosine plots and machine-readable summaries."""
 
@@ -1416,6 +1503,7 @@ def plot_cosine_diagnostics(
             prepared_diffusion,
             output_dir,
             prefix,
+            masked_accuracy=masked_accuracy,
         )
     )
     return outputs

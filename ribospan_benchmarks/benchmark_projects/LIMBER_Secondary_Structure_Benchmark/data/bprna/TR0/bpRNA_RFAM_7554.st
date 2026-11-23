@@ -1,0 +1,2 @@
+AAAGAAGUAGUAUGCCGCAGCGUAUCCAUAACGGGCUUUGCUGCGGAUAAUUCUUUUAUGAACCCCCUUAGGAGUGAAUAAUGGCCCGUAUAGCCGGCAUUAACAUUCCUGAU
+...((((((((((............[[[...[[[[....{{{....))))))))))............................]]]]......]]]............}}}.

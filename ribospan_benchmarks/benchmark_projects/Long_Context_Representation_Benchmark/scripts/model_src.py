@@ -14,16 +14,19 @@ RNABERT_ROOT = MODEL_SRC_ROOT / "rnabert"
 RIBOSPAN_ROOT = MODEL_SRC_ROOT / "ribospan"
 HYDRARNA_SRC_ROOT = MODEL_SRC_ROOT / "HydraRNA"
 RINALMO_SRC_ROOT = MODEL_SRC_ROOT / "RiNALMo"
+RNAVERSE_SRC_ROOT = MODEL_SRC_ROOT / "RNAverse"
+RIBOGRAM_SRC_ROOT = MODEL_SRC_ROOT / "RiboGRAM"
 
 
 def ensure_import_path() -> Path:
-    """Put ``model_src/`` (and RiNALMo, if present) on ``sys.path``."""
+    """Put ``model_src/``, RiNALMo, RNAverse, and RiboGRAM on ``sys.path`` when present."""
 
     src = str(MODEL_SRC_ROOT)
     if src not in sys.path:
         sys.path.insert(0, src)
-    if RINALMO_SRC_ROOT.is_dir():
-        rinalmo_s = str(RINALMO_SRC_ROOT)
-        if rinalmo_s not in sys.path:
-            sys.path.insert(0, rinalmo_s)
+    for extra in (RINALMO_SRC_ROOT, RNAVERSE_SRC_ROOT, RIBOGRAM_SRC_ROOT):
+        if extra.is_dir():
+            extra_s = str(extra)
+            if extra_s not in sys.path:
+                sys.path.insert(0, extra_s)
     return MODEL_SRC_ROOT

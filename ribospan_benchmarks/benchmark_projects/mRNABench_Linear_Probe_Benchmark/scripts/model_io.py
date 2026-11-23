@@ -386,6 +386,12 @@ def checkpoint_files_present(path: Path, backend: str | None = "rnabert") -> tup
         ):
             return True, ""
         return False, f"missing HydraRNA checkpoint under {path}"
+    if name == "limber":
+        if path.is_dir() and (path / "model_config.json").is_file() and (
+            (path / "pytorch_model.bin").is_file() or (path / "model.safetensors").is_file()
+        ):
+            return True, ""
+        return False, f"missing LIMBER weights under {path}"
     return True, ""
 
 

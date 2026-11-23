@@ -377,10 +377,13 @@ models:
     - RiNALMo
     - AIDO.RNA-CDS
     - HydraRNA
+    - RiboGRAM
+    - RNAverse
     - RIBOSPAN-1K-15
     - RIBOSPAN-1K-40
     - RIBOSPAN-10K-15
     - RIBOSPAN-10K-40
+    - LIMBER-macro
   device: cuda:0
   dtype: bfloat16
   skip_existing: true

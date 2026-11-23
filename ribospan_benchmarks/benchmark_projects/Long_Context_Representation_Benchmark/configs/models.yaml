@@ -6,6 +6,16 @@ models:
     source_path: HydraRNA
     context_window: 4096
 
+  - name: RiboGRAM
+    backend: ribogram
+    source_path: RiboGRAM
+    context_window: 1024
+
+  - name: RNAverse
+    backend: rnaverse
+    source_path: RNAverse
+    context_window: 1024
+
   - name: AIDO.RNA-CDS
     backend: rnabert
     source_path: AIDO.RNA-CDS

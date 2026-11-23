@@ -1,0 +1,45 @@
+schema_version: 1
+models_registry: configs/models.yaml
+output_root: outputs/ssp_structrfm
+
+# Backbones stay frozen. embed / train / score run the MixedFold head.
+protocol:
+  name: structrfm
+  backbone: frozen
+  head: mxfold2
+  decode: zuker
+
+data:
+  root: data
+  names:
+    - bprna-ts0
+    - archiveII600
+
+datasets:
+  bprna-ts0:
+    train: bprna-1m
+    n_train_claimed: 12114
+    split: test
+    n_test: 1305
+    metric: f1
+  archiveII600:
+    train: rnastralign
+    n_train_claimed: 19313
+    split: test
+    length_max: 600
+    metric: f1
+
+# Models drawn in the summary figure, in this order. The tables hold every model.
+figure:
+  models: [structRFM, RIBOSPAN-10K-15, RIBOSPAN-10K-40]
+
+models:
+  names:
+    - structRFM
+    - RIBOSPAN-1K-15
+    - RIBOSPAN-1K-40
+    - RIBOSPAN-10K-15
+    - RIBOSPAN-10K-40
+  device: cuda:0
+  dtype: bfloat16
+  trainable: head

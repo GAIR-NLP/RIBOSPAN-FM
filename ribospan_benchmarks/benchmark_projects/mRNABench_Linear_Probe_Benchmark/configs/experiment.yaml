@@ -98,6 +98,9 @@ models:
     - RiNALMo
     - AIDO.RNA-CDS
     - HydraRNA
+    - RiboGRAM
+    - RNAverse
+    - LIMBER-macro
     - RIBOSPAN-1K-15
     - RIBOSPAN-1K-40
     - RIBOSPAN-10K-15

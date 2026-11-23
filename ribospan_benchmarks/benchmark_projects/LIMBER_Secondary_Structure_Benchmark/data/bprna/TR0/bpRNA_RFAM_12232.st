@@ -1,0 +1,2 @@
+AUGAAUGAUGAAAACGAUGAUUAGAUAGAAGUUUCGGCGAUGUUGUUACACUCAGGCAUAAAACUCAGUCAGAGAUGACGAGUUUAAAAAGCUAGGGACGUUUCGUAUUUCCAUUGAUGAUGCUGACAU
+.((...........................................................................................................................)).
